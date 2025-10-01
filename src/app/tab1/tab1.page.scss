@@ -1,0 +1,364 @@
+// Toolbar personalizado
+.toolbar-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .app-icon {
+    font-size: 24px;
+    color: var(--ion-color-primary);
+  }
+
+  .app-name {
+    font-weight: 600;
+    font-size: 18px;
+  }
+}
+
+// Conteúdo principal
+.home-content {
+  --background: #f8f9fa;
+}
+
+// Container da barra de pesquisa
+.search-container {
+  padding: 16px;
+  background: white;
+  margin-bottom: 8px;
+
+  .custom-searchbar {
+    --background: #f1f3f4;
+    --border-radius: 20px;
+    --box-shadow: none;
+    --placeholder-color: #6c757d;
+    
+    .searchbar-input {
+      font-size: 16px;
+    }
+  }
+}
+
+// Menu de categorias
+.category-menu {
+  background: white;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e9ecef;
+
+  .category-segment {
+    --background: transparent;
+    padding: 0 16px;
+
+    ion-segment-button {
+      --color: #6c757d;
+      --color-checked: var(--ion-color-primary);
+      --background-checked: rgba(var(--ion-color-primary-rgb), 0.1);
+      --border-radius: 20px;
+      margin: 0 4px;
+      min-width: auto;
+      font-size: 14px;
+
+      ion-icon {
+        font-size: 18px;
+        margin-bottom: 2px;
+      }
+
+      ion-label {
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Seção de destaques
+.featured-section {
+  margin-bottom: 24px;
+  
+  .featured-books {
+    padding: 0 16px;
+
+    .featured-book-card {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      .book-cover {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        aspect-ratio: 3/4;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .book-overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: linear-gradient(transparent, rgba(0,0,0,0.8));
+          color: white;
+          padding: 20px 12px 12px;
+
+          h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+            line-height: 1.2;
+          }
+
+          p {
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.9;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Seções de livros
+.book-section {
+  margin-bottom: 24px;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 12px;
+    cursor: pointer;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      color: #212529;
+    }
+
+    ion-icon {
+      color: #6c757d;
+      font-size: 20px;
+    }
+  }
+
+  ion-slides {
+    padding: 0 16px;
+  }
+
+  .book-card {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .book-image {
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: #e9ecef;
+      }
+    }
+
+    .book-info {
+      h4 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 4px 0;
+        color: #212529;
+        line-height: 1.3;
+        display: -webkit-box;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      p {
+        font-size: 12px;
+        color: #6c757d;
+        margin: 0;
+        display: -webkit-box;
+        line-clamp: 1;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+// Scroll horizontal para livros em destaque
+.featured-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 0 16px;
+  scroll-snap-type: x mandatory;
+
+  .featured-book-card {
+    flex: 0 0 160px;
+    scroll-snap-align: start;
+  }
+}
+
+// Scroll horizontal para seções de livros
+.book-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 0 16px;
+  scroll-snap-type: x mandatory;
+  
+  .book-card {
+    flex: 0 0 120px;
+    scroll-snap-align: start;
+  }
+}
+
+// Hide scrollbar mas manter funcionalidade
+.featured-scroll,
+.book-scroll {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  
+  &::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+}
+
+// Responsividade para tablets
+@media (min-width: 768px) {
+  .featured-books {
+    ion-slides {
+      --slides-per-view: 4.5;
+    }
+  }
+
+  .book-section {
+    ion-slides {
+      --slides-per-view: 5.5;
+    }
+  }
+}
+
+// Ajustes para modo escuro
+@media (prefers-color-scheme: dark) {
+  .home-content {
+    --background: #121212;
+  }
+
+  .search-container,
+  .category-menu {
+    background: #1e1e1e;
+  }
+
+  .custom-searchbar {
+    --background: #2c2c2c;
+  }
+
+  .section-header h2 {
+    color: #ffffff;
+  }
+
+  .book-info h4 {
+    color: #ffffff;
+  }
+}
+
+
+// seção de autores
+.author-card {
+  display: flex;
+  align-items: center;
+  background-color: #828282;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  gap: 20px;
+  overflow-x: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.author-info {
+  width: 120px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.author-carousel {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.author-book-card {
+  min-width: 70px;
+  height: 110px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+.author-book-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.custom-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  min-width: 60px;
+  max-width: 80px;
+  text-align: center;
+}
+
+.indicator img {
+  width: 50px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+
+.indicator span {
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+

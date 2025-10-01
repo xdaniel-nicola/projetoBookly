@@ -1,17 +1,41 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 2
+      Discover
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
+    
     <ion-toolbar>
       <ion-title size="large">Tab 2</ion-title>
     </ion-toolbar>
   </ion-header>
+    <ion-item> 
+      <ion-searchbar show-clear-button="always" placeholder="Procure por livros, autores..."></ion-searchbar>
+    </ion-item>
+    <!-- lista de livros -->
+    <div class="grid-container">
+      @for (book of filteredBooks; track book.id) {
+        <div class="grid-item" (click)="onBookClick(book)">
+          <img [src]="book.image" [alt]="book.title" />
+        </div>
+      }
+    </div>
+     <!-- <ion-list>
+      @for (book of filteredBooks; track book.id) {
+        <ion-item (click)="onBookClick(book)">
+          <ion-thumbnail slot="start">
+            <img [src]="book.image" [alt]="book.title" />
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ book.title }}</h2>
+            <p>{{ book.author }}</p>
+          </ion-label>
+        </ion-item>
+      }
+     </ion-list> -->
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
 </ion-content>

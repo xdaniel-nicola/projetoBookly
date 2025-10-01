@@ -1,0 +1,12 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+  gap: 10px; /* espaçamento entre as capas */
+  padding: 10px;
+}
+
+.grid-item img {
+  width: 100%;    /* ocupa toda a largura da célula */
+  height: auto;   /* mantém proporção */
+  border-radius: 8px; /* opcional, deixa arredondado */
+}
