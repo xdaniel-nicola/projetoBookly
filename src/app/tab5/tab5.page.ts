@@ -1,20 +1,76 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar
+  ,IonButton, IonCol, IonRow, IonGrid
+ } from '@ionic/angular/standalone';
+import { count } from 'rxjs';
+
+type Book = {
+  title: string;
+  image: string;
+  category: string;
+};
 
 @Component({
   selector: 'app-tab5',
   templateUrl: './tab5.page.html',
   styleUrls: ['./tab5.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule
+    ,IonButton, IonCol, IonRow, IonGrid
+  ]
 })
+
+
 export class Tab5Page implements OnInit {
+
+  filteredBooks: Book[] = [];
+
+  filterByStatus(status: string) {
+    this.filteredBooks = this.books.filter(book => book.category === status);
+  };
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  goals = [
+    {type: 'Diária', value: 30, unit: 'páginas'},
+    {type: 'Mensal', value: 12, unit: 'livros'},
+    {type: 'Anual', value: 100, unit: 'livros'}
+  ];
+
+  readingStatuses = [
+    {status: 'Lidos', count: 20},
+    {status: 'Estou lendo', count: 1},
+    {status: 'Quero ler', count: 5},
+    {status: 'Relendo', count: 1},
+    {status: 'Avaliados', count: 4},
+    {status: 'Abandonados', count: 2}
+  ];
+
+  libraryCategories = [
+    {label: 'Avaliados'},
+    {label: 'Quero ler'},
+    {label: 'Lidos'},
+    {label: 'Relendo'},
+    {label: 'Abandonados'},
+    {label: 'Estou lendo'}
+  ];
+
+  books = [
+    {title: 'A Hipótese do Amor', image: 'assets/capas/hipotese.jpg', category: 'Lidos'},
+    {title: 'Não Pisque', image: 'assets/capas/nao-pisque.jpg', category: 'Estou lendo'},
+    {title: 'Instinto assassino', image: 'assets/capas/instinto-assassino.jpg', category: 'Quero ler'},
+  ];
+
+  editGoal(goal: any) {
+    console.log('Editar meta: ', goal);
+  }
+
+  openLibraryCategory(label: string) {
+    console.log('Abrir categoria: ', label)
+  }
 }
