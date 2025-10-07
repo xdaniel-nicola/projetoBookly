@@ -130,13 +130,31 @@
 
 .comment-item {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  color: #444;
+  align-items: flex-start;
+  gap: 10px;
 }
 
-.comment-box ion-textarea {
-  width: 100%;
-  min-height: 80px;
+.comment-item .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-content {
+  background-color: #f1f1f1;
+  padding: 8px 12px;
+  border-radius: 10px;
+  max-width: 80%;
+}
+
+.comment-content strong {
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.comment-content p {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: #555;
 }
