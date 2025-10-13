@@ -259,31 +259,6 @@
   }
 }
 
-// Ajustes para modo escuro
-@media (prefers-color-scheme: dark) {
-  .home-content {
-    --background: #121212;
-  }
-
-  .search-container,
-  .category-menu {
-    background: #1e1e1e;
-  }
-
-  .custom-searchbar {
-    --background: #2c2c2c;
-  }
-
-  .section-header h2 {
-    color: #ffffff;
-  }
-
-  .book-info h4 {
-    color: #ffffff;
-  }
-}
-
-
 // seção de autores
 .author-card {
   display: flex;

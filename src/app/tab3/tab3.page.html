@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Reviews
+      Feed
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -66,10 +66,16 @@
       </div>
 
       <div class="comment-list">
-        @for (comment of activeReview.comments; track comment) {
+        @for (comment of activeReview.comments; track comment.text) {
           <div class="comment-item">
+            
+            <img class="avatar" [src]="comment.avatar" alt="{{ comment.user }}"/>
             <ion-icon name="chatbubble-outline"></ion-icon>
-            <span>{{ comment }}</span>
+            <div class="comment-user">
+              <strong>{{ comment.user }}</strong>
+              <p>{{ comment.text }}</p>
+            </div>
+            
           </div>
         }
       </div>

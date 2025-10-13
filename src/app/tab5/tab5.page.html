@@ -1,13 +1,86 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>tab5</ion-title>
+    <ion-title>Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
+    <!-- <ion-toolbar>
       <ion-title size="large">Perfil</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    </ion-toolbar> -->
+  <!-- <ion-header collapse="condense"> -->
+    <div class="profile-header">
+      <img class="avatar" src="assets/perfis/foto.png" alt="Daniel Nicola">
+      <div class="profile-info">
+        <h2>Daniel Nicola</h2>
+        <p>@udanieell</p>
+        <ion-button size="small" fill="outline">Editar perfil</ion-button>
+      </div>
+    </div>
+
+    <!-- ÁREA DE METAS -->
+    <ion-grid>
+      <h3>Metas</h3>
+      <ion-row>
+        @for (goal of goals; track goal.type) {
+          <ion-col size="4">
+            <div class="goal-card">
+              <h4>{{ goal.type }}</h4>
+              <p>{{ goal.value }} {{ goal.unit }}</p>
+              <ion-button size="small" (click)="editGoal(goal)">Editar</ion-button>
+            </div>
+          </ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+    <!-- <div class="goals-sections">
+      <h3>Metas</h3>
+      <div class="goal-options">
+        @for (goal of goals; track goal.type) {
+          <div class="goal.card">
+            <h4>{{ goal.type }}</h4>
+            <p>{{ goal.value }} {{ goal.unit }}</p>
+            <ion-button size="small" (click)="editGoal(goal)">Editar</ion-button>
+          </div>
+        }
+      </div>
+    </div> -->
+
+    <!-- ÁREA DE LEITURA -->
+    <div class="status-sections">
+      <h3>Livros por status</h3>
+        <div class="status-grid">
+          @for (status of readingStatuses; track status.status) {
+            <ion-button fill="clear" (click)="filterByStatus(status.status)">
+              {{ status.status }} ({{ status.count }})
+            </ion-button>
+          }
+    </div>
+
+    <!-- BIBLIOTECA -->
+    <div class="section">
+      <h3>Minha biblioteca</h3>
+      <div class="library-categories">
+        @for (category of libraryCategories; track category.label) {
+          <ion-button fill="outline" (click)="openLibraryCategory(category.label)">
+            {{ category.label }}
+          </ion-button>
+        }
+      </div>
+    </div>
+    
+    
+    <!-- <div class="library-section">
+      <h3>Minha biblioteca</h3>
+      <div class="library-categories">
+        @for (category of libraryCategories; track category.label) {
+          <ion-button fill="outline" (click)="openLibraryCategory(category.label)">
+            {{ category.label }}
+          </ion-button>
+        }
+      </div>
+    </div> -->
+
+     </div>
+  <!-- </ion-header> -->
 </ion-content>

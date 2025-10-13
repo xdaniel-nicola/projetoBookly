@@ -1,0 +1,60 @@
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-info h2 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.profile-info p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 4px 0;
+}
+
+.goals-section, .status-section, .library-section {
+  padding: 15px;
+}
+
+.goal-options, .status-grid, .library-categories {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.goal-card {
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 10px;
+  width: 120px;
+  text-align: center;
+}
+
+.book-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.book-item {
+  width: 80px;
+  text-align: center;
+}
+
+.book-item img {
+  width: 100%;
+  border-radius: 6px;
+}

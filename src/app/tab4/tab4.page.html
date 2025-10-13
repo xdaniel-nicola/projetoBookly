@@ -1,13 +1,32 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>tab4</ion-title>
+    <ion-title>Notifications</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content class="ion-padding" [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">tab4</ion-title>
     </ion-toolbar>
   </ion-header>
+  @if (notifications.length > 0) {
+    <ion-list>
+      @for (notif of notifications; track notif) {
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img [src]="notif.bookImage" alt="Capa do livro"/>
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ notif.bookTitle }}</h2>
+            <p>Sua publicação teve {{ notif.likes }} curtida(s) e {{ notif.comments }} comentário(s)</p>
+
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  } @else {
+    <p>Sem notificações no momento.</p>
+  }
+  <ion-list></ion-list>
 </ion-content>

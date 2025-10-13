@@ -33,7 +33,10 @@ export class Tab3Page {
     liked: false,
     showCommentBox: false,
     newComment: '',
-    comments: ['Concordo!', 'Achei bem escrito mesmo assim.']
+    comments: [
+      { user: 'Lucas', text: 'Concordo!', avatar: 'assets/perfis/homem.jpeg' },
+      { user: 'Marina', text: 'Achei bem escrito mesmo assim.', avatar: 'assets/perfis/mulher.jpeg' }
+      ]
   },
   {
     id: 2,
@@ -47,7 +50,10 @@ export class Tab3Page {
     liked: false,
     showCommentBox: false,
     newComment: '',
-    comments: ['Sério?', 'Também reparei nisso!']
+    comments: [
+      { user: 'Douglas', text: 'Sério?', avatar: 'assets/perfis/homem.jpeg' },
+      { user: 'João', text: 'Também reparei nisso!', avatar: 'assets/perfis/homem.jpeg' }
+      ]
   },
   {
     id: 3,
@@ -61,7 +67,10 @@ export class Tab3Page {
     liked: false,
     showCommentBox: false,
     newComment: '',
-    comments: ['Concordo muito!', 'O final foi meio corrido.']
+    comments: [
+      { user: 'Carolina', text: 'Concordo muito!', avatar: 'assets/perfis/mulher.jpeg' },
+      { user: 'Larissa', text: 'O final foi meio corrido.', avatar: 'assets/perfis/mulher.jpeg' }
+      ]
   },
   {
     id: 4,
@@ -75,7 +84,10 @@ export class Tab3Page {
     liked: false,
     showCommentBox: false,
     newComment: '',
-    comments: ['Sério?', 'Essa autora é ótima!']
+    comments: [
+      { user: 'Luiza', text: 'Sério?', avatar: 'assets/perfis/mulher.jpeg' },
+      { user: 'Pedro', text: 'Essa autora é ótima!', avatar: 'assets/perfis/homem.jpeg' }
+      ]
   }
 ];
 
@@ -90,7 +102,11 @@ toggleComment(review:any) {
 
 addComment(review: any) {
   if (review.newComment?.trim()) {
-    review.comments.push(review.newComment);
+    review.comments.push({
+      user: 'Você',
+      text: review.newComment,
+      avatar: 'assets/perfis/homem.jpeg'
+    });
     review.newComment = '';
     review.showCommentBox = false;
   }
