@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Criar Conta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-input
+    label="Nome"
+    label-placement="floating"
+    [(ngModel)]="nome">
+  </ion-input>
+
+  <ion-input
+    label="Email"
+    label-placement="floating"
+    [(ngModel)]="email"
+    type="email"
+    class="ion-margin-top">
+  </ion-input>
+
+  <ion-input
+    label="Senha"
+    label-placement="floating"
+    [(ngModel)]="senha"
+    type="password"
+    class="ion-margin-top">
+  </ion-input>
+
+  <ion-input
+    label="Confirmar Senha"
+    label-placement="floating"
+    [(ngModel)]="confirmar"
+    type="password"
+    class="ion-margin-top">
+  </ion-input>
+
+  <ion-button expand="block" class="ion-margin-top" (click)="cadastrar()">
+    Cadastrar
+  </ion-button>
+
+  <ion-button fill="clear" expand="block" routerLink="/login">
+    Já tenho conta
+  </ion-button>
+
+</ion-content>

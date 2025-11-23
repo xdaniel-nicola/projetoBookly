@@ -1,10 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar
-  ,IonButton, IonCol, IonRow, IonGrid
- } from '@ionic/angular/standalone';
-import { count } from 'rxjs';
+import { 
+  IonContent, 
+  IonHeader, 
+  IonTitle, 
+  IonToolbar,
+  IonButton, 
+  IonCol, 
+  IonRow, 
+  IonGrid
+} from '@ionic/angular/standalone';
+// Removido o import 'count' não utilizado
 
 type Book = {
   title: string;
@@ -17,23 +24,37 @@ type Book = {
   templateUrl: './tab5.page.html',
   styleUrls: ['./tab5.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule
-    ,IonButton, IonCol, IonRow, IonGrid
+  imports: [
+    IonContent, 
+    IonHeader, 
+    IonTitle, 
+    IonToolbar, 
+    CommonModule, 
+    FormsModule,
+    IonButton, 
+    IonCol, 
+    IonRow, 
+    IonGrid
   ]
 })
-
-
 export class Tab5Page implements OnInit {
 
   filteredBooks: Book[] = [];
 
   filterByStatus(status: string) {
-    this.filteredBooks = this.books.filter(book => book.category === status);
-  };
+    // Inicializa filteredBooks com todos os livros se 'Todos' for passado
+    if (status === 'Todos') {
+      this.filteredBooks = this.books;
+    } else {
+      this.filteredBooks = this.books.filter(book => book.category === status);
+    }
+  }
 
   constructor() { }
 
   ngOnInit() {
+    // Garante que todos os livros sejam carregados na inicialização
+    this.filteredBooks = this.books; 
   }
 
   goals = [
@@ -51,14 +72,15 @@ export class Tab5Page implements OnInit {
     {status: 'Abandonados', count: 2}
   ];
 
-  libraryCategories = [
+  // CORRIGIDO: Agora é um ARRAY [] e não um objeto {}
+  libraryCategories = [ 
     {label: 'Avaliados'},
     {label: 'Quero ler'},
     {label: 'Lidos'},
     {label: 'Relendo'},
     {label: 'Abandonados'},
     {label: 'Estou lendo'}
-  ];
+  ]; 
 
   books = [
     {title: 'A Hipótese do Amor', image: 'assets/capas/hipotese.jpg', category: 'Lidos'},
