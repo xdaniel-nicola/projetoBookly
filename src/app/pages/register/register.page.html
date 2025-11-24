@@ -1,47 +1,109 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Criar Conta</ion-title>
-  </ion-toolbar>
-</ion-header>
+.signup-content {
+  --background: #ffffff;
+}
 
-<ion-content class="ion-padding">
+.signup-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 0 24px;
+}
 
-  <ion-input
-    label="Nome"
-    label-placement="floating"
-    [(ngModel)]="nome">
-  </ion-input>
+.header-section {
+  padding-top: 44px;
+  margin-bottom: 40px;
+}
 
-  <ion-input
-    label="Email"
-    label-placement="floating"
-    [(ngModel)]="email"
-    type="email"
-    class="ion-margin-top">
-  </ion-input>
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
 
-  <ion-input
-    label="Senha"
-    label-placement="floating"
-    [(ngModel)]="senha"
-    type="password"
-    class="ion-margin-top">
-  </ion-input>
+.logo-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #333 0%, #666 100%);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
 
-  <ion-input
-    label="Confirmar Senha"
-    label-placement="floating"
-    [(ngModel)]="confirmar"
-    type="password"
-    class="ion-margin-top">
-  </ion-input>
+.logo-text {
+  font-size: 11px;
+  color: #000000;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
 
-  <ion-button expand="block" class="ion-margin-top" (click)="cadastrar()">
-    Cadastrar
-  </ion-button>
+.app-title {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  color: #000000;
+  letter-spacing: -0.24px;
+  margin: 0;
+}
 
-  <ion-button fill="clear" expand="block" routerLink="/login">
-    Já tenho conta
-  </ion-button>
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 375px;
+  margin: 0 auto;
+  width: 100%;
+}
 
-</ion-content>
+.copy-section {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 2px 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #000000;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.custom-input {
+  --background: #ffffff;
+  --border-color: #e0e0e0;
+  --border-radius: 8px;
+  --border-width: 1px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --placeholder-color: #828282;
+  --placeholder-opacity: 1;
+  height: 40px;
+  font-size: 14px;
+}
+
+.continue-button {
+  --background: #000000;
+  --background-hover: #1a1a1a;
+  --background-activated: #0d0d0d;
+  --border-radius: 8px;
+  --color: #ffffff;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  margin: 0;
+}
