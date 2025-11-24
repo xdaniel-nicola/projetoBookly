@@ -2,10 +2,28 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
-  production: false
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+export const firebaseConfig = {
+  production: false,
+  apiKey: "AIzaSyC5KjozTzgE0mxyvi2HzZHGSZDAHyh8pR0",
+  authDomain: "projetobookly.firebaseapp.com",
+  projectId: "projetobookly",
+  storageBucket: "projetobookly.firebasestorage.app",
+  messagingSenderId: "393387365728",
+  appId: "1:393387365728:web:695ccd864808ac6b1d7a05",
+  measurementId: "G-NY4VVZGYLJ"
 };
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
