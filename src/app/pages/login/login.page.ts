@@ -5,9 +5,9 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-signin',
-  templateUrl: './signin.page.html',
-  styleUrls: ['./signin.page.scss'],
+  selector: 'app-login',
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
