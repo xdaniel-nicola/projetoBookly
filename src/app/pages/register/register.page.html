@@ -1,109 +1,69 @@
-.signup-content {
-  --background: #ffffff;
-}
+<ion-content [fullscreen]="true" class="signup-content">
+  <div class="signup-container">
+    <!-- Logo e Título -->
+    <div class="header-section">
+      <div class="logo-container">
+        <div class="logo-icon"></div>
+        <div class="logo-text">Bookly</div>
+      </div>
+      <h1 class="app-title">Bookly</h1>
+    </div>
 
-.signup-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  padding: 0 24px;
-}
+    <!-- Conteúdo Principal -->
+    <div class="content-wrapper">
+      <!-- Textos de Cabeçalho -->
+      <div class="copy-section">
+        <h2 class="title">Criar uma conta</h2>
+        <p class="subtitle">Preencha os próximos campos para se cadastrar</p>
+      </div>
 
-.header-section {
-  padding-top: 44px;
-  margin-bottom: 40px;
-}
+      <!-- Formulário -->
+      <div class="form-section">
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="email@dominio.com"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
-.logo-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-bottom: 12px;
-}
+        <ion-input
+          type="text"
+          [(ngModel)]="fullName"
+          placeholder="Nome completo"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
-.logo-icon {
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, #333 0%, #666 100%);
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
+        <ion-input
+          type="tel"
+          [(ngModel)]="phone"
+          placeholder="Número de telefone (**) *****-****"
+          class="custom-input"
+          fill="outline"
+          (ionBlur)="formatPhone()"
+        ></ion-input>
 
-.logo-text {
-  font-size: 11px;
-  color: #000000;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          placeholder="Senha"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
-.app-title {
-  font-size: 24px;
-  font-weight: 600;
-  text-align: center;
-  color: #000000;
-  letter-spacing: -0.24px;
-  margin: 0;
-}
+        <ion-input
+          type="password"
+          [(ngModel)]="confirmPassword"
+          placeholder="Confirmar senha"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
-.content-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  max-width: 375px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.copy-section {
-  text-align: center;
-  margin-bottom: 0;
-}
-
-.title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #000000;
-  margin: 0 0 2px 0;
-}
-
-.subtitle {
-  font-size: 14px;
-  color: #000000;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.form-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.custom-input {
-  --background: #ffffff;
-  --border-color: #e0e0e0;
-  --border-radius: 8px;
-  --border-width: 1px;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --placeholder-color: #828282;
-  --placeholder-opacity: 1;
-  height: 40px;
-  font-size: 14px;
-}
-
-.continue-button {
-  --background: #000000;
-  --background-hover: #1a1a1a;
-  --background-activated: #0d0d0d;
-  --border-radius: 8px;
-  --color: #ffffff;
-  height: 40px;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: none;
-  margin: 0;
-}
+        <ion-button expand="block" class="continue-button" (click)="onContinue()">
+          Continuar
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
