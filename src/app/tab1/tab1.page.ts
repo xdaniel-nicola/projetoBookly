@@ -1,29 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { IonHeader, IonToolbar, IonTitle, IonContent
-  ,IonItem
-  ,IonInput
-  ,IonSearchbar
-  ,IonLabel
-  ,IonCol
-  ,IonRow
-  ,IonGrid
-  ,IonCard
-  ,IonCardHeader
-  ,IonCardSubtitle
-  ,IonCardTitle
-  ,IonCardContent
-  ,IonButton
-  ,IonIcon
-  ,IonInfiniteScroll
-  ,IonInfiniteScrollContent
-  ,IonAvatar
-  ,IonSegment
-  ,IonSegmentButton
- } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { CommonModule, NgFor } from '@angular/common'; // NgFor para *ngFor
+import { FormsModule } from '@angular/forms'; 
+import { RouterLink } from '@angular/router'; // ⬅️ Necessário para o routerLink nos botões
+
+// Interfaces para tipagem dos dados
+interface Book {
+  title: string;
+  author: string;
+  image: string;
+}
+
+interface Author {
+  name: string;
+  books: Book[];
+}
+
+// 🚨 Importações de todos os componentes Ionic usados no HTML
+import { 
+  IonContent, 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonSearchbar, 
+  IonSegment,   
+  IonSegmentButton, 
+  IonLabel,
+  IonIcon,
+  IonButtons, // ⬅️ Componente para agrupar botões na toolbar (Login/Cadastro)
+  IonButton   // ⬅️ Componente Botão
+} from '@ionic/angular/standalone'; 
+
 
 @Component({
   selector: 'app-tab1',
@@ -31,159 +37,72 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
   styleUrls: ['tab1.page.scss'],
   standalone: true,
   imports: [
-    CommonModule
-    ,FormsModule
-    ,IonicModule
+    CommonModule, 
+    FormsModule,
+    NgFor, // Adicionado para suportar *ngFor
+    RouterLink, // Adicionado para suportar routerLink
+    IonContent, 
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonSearchbar, 
+    IonSegment, 
+    IonSegmentButton, 
+    IonLabel,
+    IonIcon,
+    IonButtons, // Incluído na lista de imports
+    IonButton   // Incluído na lista de imports
   ],
 })
-
 export class Tab1Page implements OnInit {
 
-  authors = [ 
-    {
-    name: 'Stephen King',
-    books: [
-      { title: 'Salem', image: 'assets/capas/salem.jpg' },
-      { title: 'A Coisa', image: 'assets/capas/it.jpg' },
-      { title: 'Não Pisque', image: 'assets/capas/nao-pisque.jpg' }
-      ]
-    }
-  ];
-    slideOpts = {
-    initialSlide: 0,
-    speed: 400,
-    loop: false
-  };
-
-  favoriteBooks = [
-    {
-      id: 1,
-      title: 'Salem',
-      author: 'Stephen King',
-      image: 'assets/capas/salem.jpg',
-      category: 'Terror'
-    },
-    {
-      id: 2,
-      title: 'It - A Coisa',
-      author: 'Stephen King',
-      image: 'assets/capas/it.jpg',
-      category: 'Terror'
-    },
-    {
-      id: 3,
-      title: 'Não Pisque',
-      author: 'Autor',
-      image: 'assets/capas/nao-pisque.jpg',
-      category: 'Terror'
-    }
+  // Dados Mockados (Exemplo)
+  public authors: Author[] = [
+    { name: 'Stephen King', books: [
+      { title: 'It', author: 'S. King', image: 'https://placehold.co/100x150/505050/ffffff?text=SK1' },
+      { title: 'Carrie', author: 'S. King', image: 'https://placehold.co/100x150/505050/ffffff?text=SK2' },
+      { title: 'The Shining', author: 'S. King', image: 'https://placehold.co/100x150/505050/ffffff?text=SK3' },
+    ]},
+    // ... adicione mais autores se quiser
   ];
 
-  terrorBooks = [
-    {
-      id: 4,
-      title: 'O Exorcista',
-      author: 'William Peter Blatty',
-      image: 'assets/capas/exorcista.jpg',
-      category: 'Terror'
-    },
-    {
-      id: 5,
-      title: 'It - A Coisa',
-      author: 'Stephen King',
-      image: 'assets/capas/it.jpg',
-      category: 'Terror'
-    },
-    {
-      id: 6,
-      title: 'Não fale com estranhos',
-      author: 'Autor',
-      image: 'assets/capas/nao-fale.jpg',
-      category: 'Terror'
-    },
-    {
-      id: 7,
-      title: 'Nosferatu',
-      author: 'Autor',
-      image: 'assets/capas/nosferatu.jpg',
-      category: 'Terror'
-    }
+  public terrorBooks: Book[] = [
+    { title: 'Livro Terror A', author: 'Autor 1', image: 'https://placehold.co/100x150/004c00/ffffff?text=TerrorA' },
+    { title: 'Livro Terror B', author: 'Autor 2', image: 'https://placehold.co/100x150/004c00/ffffff?text=TerrorB' },
+    { title: 'Livro Terror C', author: 'Autor 3', image: 'https://placehold.co/100x150/004c00/ffffff?text=TerrorC' },
   ];
 
-  adventureBooks = [
-    {
-      id: 8,
-      title: 'Instinto Assassino',
-      author: 'Autor',
-      image: 'assets/capas/instinto.jpg',
-      category: 'Ação e Aventura'
-    },
-    {
-      id: 9,
-      title: 'Coraline',
-      author: 'Neil Gaiman',
-      image: 'assets/capas/coraline.jpg',
-      category: 'Ação e Aventura'
-    },
-    {
-      id: 10,
-      title: 'Amanhecer na Colheita',
-      author: 'Autor',
-      image: 'assets/capas/amanhecer.jpg',
-      category: 'Ação e Aventura'
-    },
-    {
-      id: 11,
-      title: 'Princesa das Cinzas',
-      author: 'Autor',
-      image: 'assets/capas/princesa.jpg',
-      category: 'Ação e Aventura'
-    }
+  public adventureBooks: Book[] = [
+    { title: 'Aventura X', author: 'A. Autor', image: 'https://placehold.co/100x150/00004c/ffffff?text=AventuraX' },
+    { title: 'Aventura Y', author: 'B. Autor', image: 'https://placehold.co/100x150/00004c/ffffff?text=AventuraY' },
   ];
 
-  romanceBooks = [
-    {
-      id: 12,
-      title: 'Teto para Dois',
-      author: 'Autor',
-      image: 'assets/capas/teto-para-dois.jpg',
-      category: 'Romance'
-    },
-    {
-      id: 13,
-      title: 'Se não fosse você',
-      author: 'Autor',
-      image: 'assets/capas/se-nao-fosse-voce.jpg',
-      category: 'Romance'
-    },
-    {
-      id: 14,
-      title: 'A Hipótese do Amor',
-      author: 'Ali Hazelwood',
-      image: 'assets/capas/hipotese.jpg',
-      category: 'Romance'
-    }
+  public romanceBooks: Book[] = [
+    { title: 'Romance P', author: 'R. Autor', image: 'https://placehold.co/100x150/4c0000/ffffff?text=RomanceP' },
+    { title: 'Romance Q', author: 'S. Autor', image: 'https://placehold.co/100x150/4c0000/ffffff?text=RomanceQ' },
   ];
-
-  searchQuery = '';
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Lógica de inicialização
+  }
 
+  // Métodos de Eventos (requeridos pelo seu HTML)
+  
   onSearchInput(event: any) {
-    this.searchQuery = event.target.value.toLowerCase();
-    // lógica de busca aqui dps
-}
-
-  onBookClick(book: any) {
-    console.log('Livro selecionado: ', book);
-    // abrir detalhes do livro
+    const searchTerm = event.detail.value;
+    console.log('Termo de pesquisa:', searchTerm);
+    // Implemente a lógica de filtro
   }
 
   onSectionClick(section: string) {
-    console.log('Seção clicada: ', section);
-    // abrir a página da categoria
+    console.log('Seção clicada para ver todos:', section);
+    // Implemente a navegação para a página de listagem da seção
+  }
+
+  onBookClick(book: Book) {
+    console.log('Livro clicado:', book.title);
+    // Implemente a navegação para a página de detalhes do livro
   }
 }
-

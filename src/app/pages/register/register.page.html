@@ -1,0 +1,92 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <!-- Botão de Voltar, retorna para a tela anterior (Home) -->
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button> 
+    </ion-buttons>
+    <ion-title>Cadastro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding ion-text-center">
+  
+  <ion-card class="register-card">
+    <ion-card-header>
+      <ion-card-title>Crie sua conta</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <!-- Formulário de Cadastro -->
+      <form (ngSubmit)="onRegister()">
+        
+        <!-- Input de Nome de Usuário/Nome Completo -->
+        <ion-item>
+          <ion-label position="floating">Nome de Usuário</ion-label>
+          <ion-input 
+            type="text" 
+            [(ngModel)]="registrationForm.username" 
+            name="username"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Input de E-mail -->
+        <ion-item>
+          <ion-label position="floating">E-mail</ion-label>
+          <ion-input 
+            type="email" 
+            [(ngModel)]="registrationForm.email" 
+            name="email"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Input de Senha -->
+        <ion-item>
+          <ion-label position="floating">Senha</ion-label>
+          <ion-input 
+            [type]="isPasswordVisible ? 'text' : 'password'" 
+            [(ngModel)]="registrationForm.password" 
+            name="password"
+            required>
+          </ion-input>
+          <!-- Botão para mostrar/esconder senha -->
+          <ion-icon 
+            slot="end" 
+            [name]="isPasswordVisible ? 'eye-outline' : 'eye-off-outline'"
+            (click)="togglePasswordVisibility()">
+          </ion-icon>
+        </ion-item>
+
+        <!-- Input de Confirmação de Senha -->
+        <ion-item>
+          <ion-label position="floating">Confirmar Senha</ion-label>
+          <ion-input 
+            [type]="isConfirmPasswordVisible ? 'text' : 'password'" 
+            [(ngModel)]="registrationForm.confirmPassword" 
+            name="confirmPassword"
+            required>
+          </ion-input>
+          <!-- Botão para mostrar/esconder confirmação de senha -->
+          <ion-icon 
+            slot="end" 
+            [name]="isConfirmPasswordVisible ? 'eye-outline' : 'eye-off-outline'"
+            (click)="toggleConfirmPasswordVisibility()">
+          </ion-icon>
+        </ion-item>
+        
+        <!-- Botão de Enviar (submit) -->
+        <ion-button expand="block" type="submit" class="ion-margin-top">
+          Cadastrar
+        </ion-button>
+      </form>
+
+      <!-- Link para Login -->
+      <p class="ion-margin-top">
+        Já tem uma conta? 
+        <a routerLink="/login">Faça Login</a>
+      </p>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>

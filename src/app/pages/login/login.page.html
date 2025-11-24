@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <!-- Botão de Voltar, retorna para a tela anterior (Home) -->
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button> 
+    </ion-buttons>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding ion-text-center">
+  
+  <ion-card class="login-card">
+    <ion-card-header>
+      <ion-card-title>Bem-vindo(a) de volta!</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <!-- Formulário de Login -->
+      <form (ngSubmit)="onLogin()">
+        
+        <!-- Input de E-mail -->
+        <ion-item>
+          <ion-label position="floating">E-mail</ion-label>
+          <ion-input 
+            type="email" 
+            [(ngModel)]="loginForm.email" 
+            name="email"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Input de Senha -->
+        <ion-item>
+          <ion-label position="floating">Senha</ion-label>
+          <ion-input 
+            [type]="isPasswordVisible ? 'text' : 'password'" 
+            [(ngModel)]="loginForm.password" 
+            name="password"
+            required>
+          </ion-input>
+          <!-- Botão para mostrar/esconder senha -->
+          <ion-icon 
+            slot="end" 
+            [name]="isPasswordVisible ? 'eye-outline' : 'eye-off-outline'"
+            (click)="togglePasswordVisibility()">
+          </ion-icon>
+        </ion-item>
+        
+        <!-- Botão de Enviar (submit) -->
+        <ion-button expand="block" type="submit" class="ion-margin-top">
+          Entrar
+        </ion-button>
+      </form>
+
+      <!-- Link para Esqueci a Senha -->
+      <p class="ion-margin-top">
+        <a href="#">Esqueci minha senha</a>
+      </p>
+
+      <!-- Link para Cadastro -->
+      <p>
+        Ainda não tem conta? 
+        <a routerLink="/register">Crie uma aqui</a>
+      </p>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>
