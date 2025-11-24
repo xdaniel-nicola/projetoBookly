@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { TabsPage } from './tabs.page'; // Garante que este ficheiro exporta 'TabsPage'
+import { TabsPage } from './tabs/tabs.page'; // Garante que este ficheiro exporta 'TabsPage'
 
 export const routes: Routes = [
   {
@@ -9,27 +9,27 @@ export const routes: Routes = [
       // 1. Rota da Tab 1
       {
         path: 'tab1',
-        loadComponent: () => import('../tab1/tab1.page').then(m => m.Tab1Page)
+        loadComponent: () => import('./tab1/tab1.page').then(m => m.Tab1Page)
       },
       // 2. Rota da Tab 2
       {
         path: 'tab2',
-        loadComponent: () => import('../tab2/tab2.page').then(m => m.Tab2Page)
+        loadComponent: () => import('./tab2/tab2.page').then(m => m.Tab2Page)
       },
       // 3. Rota da Tab 3
       {
         path: 'tab3',
-        loadComponent: () => import('../tab3/tab3.page').then(m => m.Tab3Page)
+        loadComponent: () => import('./tab3/tab3.page').then(m => m.Tab3Page)
       },
       // 4. Rota da Tab 4
       {
         path: 'tab4',
-        loadComponent: () => import('../tab4/tab4.page').then(m => m.Tab4Page)
+        loadComponent: () => import('./tab4/tab4.page').then(m => m.Tab4Page)
       },
       // 5. Rota da Tab 5
       {
         path: 'tab5',
-        loadComponent: () => import('../tab5/tab5.page').then(m => m.Tab5Page)
+        loadComponent: () => import('./tab5/tab5.page').then(m => m.Tab5Page)
       },
       // Rota de Redirecionamento Padrão (Redireciona para a primeira aba)
       {
