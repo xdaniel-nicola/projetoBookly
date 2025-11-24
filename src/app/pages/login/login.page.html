@@ -1,32 +1,71 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="signin-content">
+  <div class="signin-container">
+    <!-- Logo e Título -->
+    <div class="header-section">
+      <div class="logo-container">
+        <div class="logo-icon"></div>
+        <div class="logo-text">Bookly</div>
+      </div>
+      <h1 class="app-title">Bookly</h1>
+    </div>
 
-<ion-content class="ion-padding">
+    <!-- Conteúdo Principal -->
+    <div class="content-wrapper">
+      <!-- Textos de Cabeçalho -->
+      <div class="copy-section">
+        <h2 class="title">Entrar na sua conta</h2>
+        <p class="subtitle">Insira seu e-mail e senha para entrar no aplicativo</p>
+      </div>
 
-  <ion-input
-    label="Email"
-    label-placement="floating"
-    [(ngModel)]="email"
-    type="email">
-  </ion-input>
+      <!-- Formulário -->
+      <div class="form-section">
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="email@dominio.com"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
-  <ion-input
-    label="Senha"
-    label-placement="floating"
-    [(ngModel)]="senha"
-    type="password"
-    class="ion-margin-top">
-  </ion-input>
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          placeholder="*********"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
-  <ion-button expand="block" class="ion-margin-top" (click)="entrar()">
-    Entrar
-  </ion-button>
+        <ion-button expand="block" class="continue-button" (click)="onContinue()">
+          Continuar
+        </ion-button>
+      </div>
 
-  <ion-button fill="clear" expand="block" routerLink="/register">
-    Criar Conta
-  </ion-button>
+      <!-- Divisor -->
+      <div class="divider-section">
+        <div class="divider-line"></div>
+        <span class="divider-text">ou</span>
+        <div class="divider-line"></div>
+      </div>
 
+      <!-- Botões Sociais -->
+      <div class="social-buttons">
+        <ion-button expand="block" fill="clear" class="social-button google-button" (click)="onGoogleLogin()">
+          <div class="google-icon"></div>
+          Continuar com o Google
+        </ion-button>
+
+        <ion-button expand="block" fill="clear" class="social-button apple-button" (click)="onAppleLogin()">
+          <div class="apple-icon"></div>
+          Continuar com a Apple
+        </ion-button>
+      </div>
+
+      <!-- Termos -->
+      <p class="terms-text">
+        Ao clicar em continuar, você concorda com os nossos 
+        <span class="terms-link">Termos de Serviço</span> e com a 
+        <span class="terms-link">Política de Privacidade</span>
+      </p>
+    </div>
+  </div>
 </ion-content>
