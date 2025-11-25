@@ -9,14 +9,34 @@
       <ion-title size="large">Perfil</ion-title>
     </ion-toolbar> -->
   <!-- <ion-header collapse="condense"> -->
-    <div class="profile-header">
+    <!-- <div class="profile-header">
       <img class="avatar" src="assets/perfis/foto.png" alt="Daniel Nicola">
       <div class="profile-info">
         <h2>Daniel Nicola</h2>
         <p>@udanieell</p>
         <ion-button size="small" fill="outline">Editar perfil</ion-button>
       </div>
+    </div> -->
+    @if (userData) {
+    <div class="profile-header">
+      <img class="avatar" 
+          [src]="userData.photoURL || 'assets/perfis/foto.png'"
+          alt = "Foto de perfil">
+
+      <div class="profile-info">
+        <h2>{{ userData.fullName }}</h2>
+        <p>@{{ userData.username }}</p>
+
+        <ion-button size="small" fill="outline">
+          Editar perfil
+        </ion-button>
+      </div>
     </div>
+    } @else {
+    <div>
+      <ion-skeleton-text animated style="width: 100%; height: 80px;"></ion-skeleton-text>
+    </div>
+    }
 
     <!-- ÁREA DE METAS -->
     <ion-grid>

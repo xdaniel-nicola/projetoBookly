@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../services/user.service';
 import { 
   IonContent, 
   IonHeader, 
@@ -9,7 +10,8 @@ import {
   IonButton, 
   IonCol, 
   IonRow, 
-  IonGrid
+  IonGrid,
+  IonSkeletonText
 } from '@ionic/angular/standalone';
 // Removido o import 'count' não utilizado
 
@@ -34,7 +36,8 @@ type Book = {
     IonButton, 
     IonCol, 
     IonRow, 
-    IonGrid
+    IonGrid,
+    IonSkeletonText
   ]
 })
 export class Tab5Page implements OnInit {
@@ -49,11 +52,19 @@ export class Tab5Page implements OnInit {
       this.filteredBooks = this.books.filter(book => book.category === status);
     }
   }
+  
+  userData: any = null;
 
-  constructor() { }
+  constructor(private userService: UserService, private ngZone: NgZone) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     // Garante que todos os livros sejam carregados na inicialização
+    // this.userData = await this.userService.getCurrentUserData();
+    const data = await this.userService.getCurrentUserData();
+    this.ngZone.run(() => {
+      this.userData = data;
+      console.log('Dados do usuário no Tab5Page: ', this.userData);
+    });
     this.filteredBooks = this.books; 
   }
 
