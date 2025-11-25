@@ -8,7 +8,9 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
-  setDoc
+  setDoc,
+  query,
+  where
 } from '@angular/fire/firestore';
 
 
@@ -49,6 +51,20 @@ export class FirestoreService {
   delete(path: string, id: string) {
     const ref = doc(this.firestore, `${path}/${id}`);
     return deleteDoc(ref);
+  }
+
+  async find(path: string, condition: [string, any, any]) {
+    const [field, op, value] = condition;
+
+    const ref = collection(this.firestore, path);
+    const q = query(ref, where(field, op, value));
+
+    const snap = await getDocs(q);
+
+    return snap.docs.map(doc => ({
+      id:doc.id,
+      ...(doc.data() as any)
+    }))
   }
   
 }

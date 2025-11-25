@@ -23,26 +23,52 @@ export class SigninPage {
     private firestoreService: FirestoreService,
     private toastCtrl: ToastController
 ) {}
+  
+  isEmail(value: string): boolean {
+    return value.includes('@') && value.includes('.');
+  }
 
   async onContinue() {
     if (!this.email || !this.password) {
       return this.showToast('Preencha todos os campos.');
     }
 
-    try {
+    try{
+      let emailParaLogin = this.email;
+
+      if (!this.isEmail(this.email)) {
+        const result = await this.firestoreService.find('users',
+          ['username', '==', this.email]
+        );
+
+        if (!result || result.length === 0) {
+          return this.showToast('Usuário não encontrado.');
+        }
+
+        emailParaLogin = result[0].email;
+      }
+
       const cred = await signInWithEmailAndPassword(
         this.auth,
-        this.email,
+        emailParaLogin,
         this.password
       );
-
+      
       const uid = cred.user.uid;
-
       const userData = await this.firestoreService.get('users', uid);
+
+      if (!userData) {
+        await this.firestoreService.set('users', uid, {
+          uid,
+          email: cred.user.email,
+          name: cred.user.displayName || 'Usuário',
+          photoURL: cred.user.photoURL || null,
+          username: null
+        });
+      }
+
       console.log('Dados do usuário: ', userData);
-
       this.showToast('Login realizado com sucesso!');
-
       this.router.navigate(['/tabs/tab1']);
     } catch (err: any) {
       console.error(err);
@@ -59,6 +85,15 @@ export class SigninPage {
 
       const userData = await this.firestoreService.get('users', uid);
       console.log('Dados do usuário: ', userData);
+      if (!userData) {
+        await this.firestoreService.set('users', uid, {
+          uid,
+          email: cred.user.email,
+          name: cred.user.displayName,
+          photoURL: cred.user.photoURL,
+          username: null
+        });
+      }
 
       this.showToast('Login com Google realizado!');
       this.router.navigate(['/tabs/tab1']);
@@ -86,18 +121,4 @@ export class SigninPage {
     };
     return errors[code] || 'Erro ao fazer login.'
   }
-  // onContinue() {
-  //   console.log('Login:', this.email, this.password);
-  //   // Implementar lógica de autenticação
-  // }
-
-  // onGoogleLogin() {
-  //   console.log('Login com Google');
-  //   // Implementar autenticação Google
-  // }
-
-  // onAppleLogin() {
-  //   console.log('Login com Apple');
-  //   // Implementar autenticação Apple
-  // }
 }
