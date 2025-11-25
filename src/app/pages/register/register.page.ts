@@ -94,6 +94,7 @@ export class SignupPage {
         username: usernameClean,
         fullName: this.fullName,
         phone: cleanedPhone,
+        photoURL: null,
         createdAt: new Date()
       });
 
