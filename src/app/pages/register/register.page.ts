@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router'; // Para o link de "Já tem conta?"
+import { RouterLink } from '@angular/router';
 
 // Importações dos componentes Ionic
 import { 
@@ -10,7 +10,7 @@ import {
   IonToolbar, 
   IonTitle, 
   IonButtons, 
-  IonBackButton, // Para o botão de voltar na barra superior
+  IonBackButton, 
   IonButton,
   IonItem, 
   IonInput, 
@@ -19,7 +19,10 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonIcon
+  IonIcon,
+  // Adicionamos os controladores necessários para alertas de erro
+  AlertController, 
+  LoadingController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
@@ -53,53 +56,88 @@ import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 })
 export class RegisterPage implements OnInit {
   
-  // Propriedade para armazenar os dados do formulário
+  // Propriedade para armazenar os dados do formulário (CORRIGIDO TS2339)
   public registrationForm = {
+    fullName: '',      // <<-- ADICIONADO
+    phoneNumber: '',   // <<-- ADICIONADO
+    username: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    username: ''
+    confirmPassword: ''
   };
 
   public isPasswordVisible: boolean = false;
   public isConfirmPasswordVisible: boolean = false;
 
-  constructor() {
-    // Adiciona os ícones que serão usados no botão de "mostrar senha"
+  constructor(
+    private alertCtrl: AlertController, // Injetando para mostrar alertas de erro
+    private loadingCtrl: LoadingController // Opcional, para mostrar carregamento
+  ) {
     addIcons({ eyeOutline, eyeOffOutline });
   }
 
   ngOnInit() {}
 
-  /**
-   * Alterna a visibilidade da senha (para o input de senha principal).
-   */
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
   
-  /**
-   * Alterna a visibilidade da confirmação de senha.
-   */
   toggleConfirmPasswordVisibility() {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+  }
+
+  // Helper para mostrar alerta
+  async presentAlert(message: string) {
+    const alert = await this.alertCtrl.create({
+      header: 'Erro de Validação',
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
   /**
    * Método que será chamado ao clicar no botão de Cadastro
    */
-  onRegister() {
-    // Aqui você adicionará a lógica de validação e autenticação (e-mail, Firebase, etc.)
-    console.log('Tentativa de Cadastro:', this.registrationForm);
+  async onRegister() {
     
+    // --- 1. VALIDAÇÃO DE COINCIDÊNCIA DE SENHAS ---
     if (this.registrationForm.password !== this.registrationForm.confirmPassword) {
-      // Usar um componente de alerta Ionic real, em vez de alert()
-      console.error('As senhas não coincidem!');
-      // Implemente um toast ou modal de erro aqui!
-      return;
+      await this.presentAlert('As senhas digitadas não coincidem.');
+      return; 
     }
 
-    // Lógica para enviar dados de cadastro...
-    // router.navigateByUrl('/tabs/tab1'); // Exemplo de navegação após o sucesso
+    // --- 2. VALIDAÇÃO ADICIONAL DE TELEFONE (Apesar da validação no HTML) ---
+    const cleanedPhoneNumber = this.registrationForm.phoneNumber.replace(/\D/g, ''); 
+    const phonePattern = /^\d{10,11}$/;
+    
+    if (!phonePattern.test(cleanedPhoneNumber)) {
+      // Este erro deve ser raro se o botão estiver desabilitado, mas é um bom backup
+      await this.presentAlert('O número de telefone é inválido. Use 10 ou 11 dígitos (apenas números).');
+      return;
+    }
+    
+    // Se passou por todas as validações manuais e do template:
+    const loading = await this.loadingCtrl.create({ message: 'Registrando...' });
+    await loading.present();
+
+    try {
+      // ** AQUI VAI A LÓGICA DE CHAMADA HTTP PARA A API/BACKEND **
+      console.log('Dados prontos para envio:', this.registrationForm);
+      
+      // Simulação de sucesso
+      await new Promise(resolve => setTimeout(resolve, 2000)); 
+      
+      // Exemplo de navegação após o sucesso
+      // this.navCtrl.navigateRoot('/tabs/tab1'); 
+      
+      await this.presentAlert('Cadastro realizado com sucesso!');
+      
+    } catch (error) {
+      console.error('Erro no cadastro:', error);
+      await this.presentAlert('Não foi possível completar o cadastro. Tente novamente.');
+    } finally {
+      loading.dismiss();
+    }
   }
 }

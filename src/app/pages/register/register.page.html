@@ -1,7 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <!-- Botão de Voltar, retorna para a tela anterior (Home) -->
       <ion-back-button defaultHref="/tabs/tab1"></ion-back-button> 
     </ion-buttons>
     <ion-title>Cadastro</ion-title>
@@ -16,72 +15,124 @@
     </ion-card-header>
 
     <ion-card-content>
-      <!-- Formulário de Cadastro -->
-      <form (ngSubmit)="onRegister()">
+      <form (ngSubmit)="onRegister()" #registerForm="ngForm">
         
-        <!-- Input de Nome de Usuário/Nome Completo -->
+        <ion-item>
+          <ion-label position="floating">Nome Completo</ion-label>
+          <ion-input 
+            type="text" 
+            [(ngModel)]="registrationForm.fullName" 
+            name="fullName"
+            required  
+            minlength="3" 
+            #fullName="ngModel">
+          </ion-input>
+        </ion-item>
+        <div class="validation-error" *ngIf="fullName.invalid && (fullName.dirty || fullName.touched)">
+          <div *ngIf="fullName.errors?.['required']">O nome completo é obrigatório.</div>
+          <div *ngIf="fullName.errors?.['minlength']">O nome deve ter no mínimo 3 caracteres.</div>
+        </div>
+
+        <ion-item>
+          <ion-label position="floating">Número de Telefone</ion-label>
+          <ion-input 
+            type="tel" 
+            [(ngModel)]="registrationForm.phoneNumber" 
+            name="phoneNumber"
+            required
+            pattern="^\d{10,11}$"
+            #phoneNumber="ngModel">
+          </ion-input>
+        </ion-item>
+        <div class="validation-error" *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)">
+          <div *ngIf="phoneNumber.errors?.['required']">O telefone é obrigatório.</div>
+          <div *ngIf="phoneNumber.errors?.['pattern']">Telefone inválido. Use 10 ou 11 dígitos (apenas números).</div>
+        </div>
+
         <ion-item>
           <ion-label position="floating">Nome de Usuário</ion-label>
           <ion-input 
             type="text" 
             [(ngModel)]="registrationForm.username" 
             name="username"
-            required>
+            required
+            #username="ngModel">
           </ion-input>
         </ion-item>
+        <div class="validation-error" *ngIf="username.invalid && (username.dirty || username.touched)">
+            <div *ngIf="username.errors?.['required']">O nome de usuário é obrigatório.</div>
+        </div>
 
-        <!-- Input de E-mail -->
         <ion-item>
           <ion-label position="floating">E-mail</ion-label>
           <ion-input 
             type="email" 
             [(ngModel)]="registrationForm.email" 
             name="email"
-            required>
+            required
+            email
+            #email="ngModel">
           </ion-input>
         </ion-item>
+        <div class="validation-error" *ngIf="email.invalid && (email.dirty || email.touched)">
+          <div *ngIf="email.errors?.['required']">O e-mail é obrigatório.</div>
+          <div *ngIf="email.errors?.['email']">Por favor, insira um e-mail válido.</div>
+        </div>
 
-        <!-- Input de Senha -->
         <ion-item>
           <ion-label position="floating">Senha</ion-label>
           <ion-input 
             [type]="isPasswordVisible ? 'text' : 'password'" 
             [(ngModel)]="registrationForm.password" 
             name="password"
-            required>
+            required
+            minlength="6"
+            #password="ngModel">
           </ion-input>
-          <!-- Botão para mostrar/esconder senha -->
           <ion-icon 
             slot="end" 
             [name]="isPasswordVisible ? 'eye-outline' : 'eye-off-outline'"
             (click)="togglePasswordVisibility()">
           </ion-icon>
         </ion-item>
+        <div class="validation-error" *ngIf="password.invalid && (password.dirty || password.touched)">
+          <div *ngIf="password.errors?.['required']">A senha é obrigatória.</div>
+          <div *ngIf="password.errors?.['minlength']">A senha deve ter no mínimo 6 caracteres.</div>
+        </div>
 
-        <!-- Input de Confirmação de Senha -->
         <ion-item>
           <ion-label position="floating">Confirmar Senha</ion-label>
           <ion-input 
             [type]="isConfirmPasswordVisible ? 'text' : 'password'" 
             [(ngModel)]="registrationForm.confirmPassword" 
             name="confirmPassword"
-            required>
+            required
+            #confirmPassword="ngModel">
           </ion-input>
-          <!-- Botão para mostrar/esconder confirmação de senha -->
           <ion-icon 
             slot="end" 
             [name]="isConfirmPasswordVisible ? 'eye-outline' : 'eye-off-outline'"
             (click)="toggleConfirmPasswordVisibility()">
           </ion-icon>
         </ion-item>
+        <div class="validation-error" *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)">
+          <div *ngIf="confirmPassword.errors?.['required']">Confirmação de senha é obrigatória.</div>
+        </div>
         
-        <!-- Botão de Enviar (submit) -->
-        <ion-button expand="block" type="submit" class="ion-margin-top">
+        <div class="validation-error" 
+             *ngIf="registrationForm.password && registrationForm.confirmPassword && registrationForm.password !== registrationForm.confirmPassword">
+          As senhas digitadas não coincidem.
+        </div>
+
+        <ion-button 
+            expand="block" 
+            type="submit" 
+            class="ion-margin-top"
+            [disabled]="registerForm.invalid">
           Cadastrar
         </ion-button>
       </form>
 
-      <!-- Link para Login -->
       <p class="ion-margin-top">
         Já tem uma conta? 
         <a routerLink="/login">Faça Login</a>

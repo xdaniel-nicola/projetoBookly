@@ -5,6 +5,7 @@ export const routes: Routes = [
     path: 'tabs',
     loadComponent: () => import('./tabs/tabs.page').then((m) => m.TabsPage),
     children: [
+      // ... (Rotas internas das tabs)
       {
         path: 'tab1',
         loadComponent: () => import('./tab1/tab1.page').then((m) => m.Tab1Page),
@@ -25,16 +26,21 @@ export const routes: Routes = [
     ],
   },
   
-  // Rota para Cadastro (CORRIGIDO: adicionado './pages/')
+  // Rota para Cadastro
   {
     path: 'register',
     loadComponent: () => import('./pages/register/register.page').then(m => m.RegisterPage)
   },
 
-  // Rota para Login (CORRIGIDO: adicionado './pages/')
+  // Rota para Login
   {
     path: 'login',
     loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage)
+  },
+
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('./pages/forgot-password/forgot-password.page').then(m => m.ForgotPasswordPage)
   },
   
   {

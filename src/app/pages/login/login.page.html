@@ -1,7 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <!-- Botão de Voltar, retorna para a tela anterior (Home) -->
       <ion-back-button defaultHref="/tabs/tab1"></ion-back-button> 
     </ion-buttons>
     <ion-title>Login</ion-title>
@@ -16,52 +15,61 @@
     </ion-card-header>
 
     <ion-card-content>
-      <!-- Formulário de Login -->
-      <form (ngSubmit)="onLogin()">
+      <!-- #loginForm="ngForm" é a referência ao formulário -->
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm">
         
         <!-- Input de E-mail -->
         <ion-item>
           <ion-label position="floating">E-mail</ion-label>
           <ion-input 
             type="email" 
-            [(ngModel)]="loginForm.email" 
+            [(ngModel)]="credentials.email" <!-- Usando 'credentials' -->
             name="email"
-            required>
-          </ion-input>
+            required
+            email
+            #email="ngModel"/> <!-- CORRIGIDO: Agora usando auto-fechamento -->
         </ion-item>
+        <div class="validation-error" *ngIf="email.invalid && (email.dirty || email.touched)">
+          <div *ngIf="email.errors?.['required']">O e-mail é obrigatório.</div>
+          <div *ngIf="email.errors?.['email']">Por favor, insira um e-mail válido.</div>
+        </div>
 
         <!-- Input de Senha -->
         <ion-item>
           <ion-label position="floating">Senha</ion-label>
           <ion-input 
             [type]="isPasswordVisible ? 'text' : 'password'" 
-            [(ngModel)]="loginForm.password" 
+            [(ngModel)]="credentials.password" <!-- Usando 'credentials' -->
             name="password"
-            required>
-          </ion-input>
-          <!-- Botão para mostrar/esconder senha -->
+            required
+            minlength="6"
+            #password="ngModel"/> <!-- CORRIGIDO: Agora usando auto-fechamento -->
           <ion-icon 
             slot="end" 
             [name]="isPasswordVisible ? 'eye-outline' : 'eye-off-outline'"
             (click)="togglePasswordVisibility()">
           </ion-icon>
         </ion-item>
+        <div class="validation-error" *ngIf="password.invalid && (password.dirty || password.touched)">
+          <div *ngIf="password.errors?.['required']">A senha é obrigatória.</div>
+          <div *ngIf="password.errors?.['minlength']">A senha deve ter no mínimo 6 caracteres.</div>
+        </div>
         
-        <!-- Botão de Enviar (submit) -->
-        <ion-button expand="block" type="submit" class="ion-margin-top">
-          Entrar
+        <!-- O [disabled] usa a referência do formulário, que é loginForm -->
+        <ion-button 
+            expand="block" 
+            type="submit" 
+            class="ion-margin-top"
+            [disabled]="loginForm.invalid"> Entrar
         </ion-button>
       </form>
 
-      <!-- Link para Esqueci a Senha -->
       <p class="ion-margin-top">
-        <a href="#">Esqueci minha senha</a>
+        <a [routerLink]="['/forgot-password']">Esqueci minha senha</a>
       </p>
 
-      <!-- Link para Cadastro -->
       <p>
-        Ainda não tem conta? 
-        <a routerLink="/register">Crie uma aqui</a>
+        Se não tem uma conta, <a routerLink="/register">crie uma aqui</a>.
       </p>
 
     </ion-card-content>
