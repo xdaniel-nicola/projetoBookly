@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 
-import { Auth, createUserWithEmailAndPassword, updateProfile } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, updateProfile, user } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { FirestoreService } from '../../services/firestore';
 
@@ -38,12 +38,26 @@ export class SignupPage {
       return;
     }
 
-    if (this.password !== this.confirmPassword) {
-      this.showToast('As senhas não conferem.')
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.email)) {
+      return this.showToast('E-mail inválido.');
     }
 
-    const usernameRegex = /^[a-zA-Z][a-zA-Z0-9._]{2,20}$/
-    if (!usernameRegex.test(this.username)) {
+    const onlyNumbers = this.phone.replace(/\D/g, '');
+    if (onlyNumbers.length < 10 || onlyNumbers.length > 11) {
+      return this.showToast('Número de telefone inválido.');
+    }
+
+    const cleanedPhone = onlyNumbers;
+
+    if (!this.username.startsWith('@')) {
+      this.username = '@' + this.username;
+    }
+
+    const usernameClean = this.username.replace('@', "").toLowerCase();
+
+    const usernameRegex = /^[a-zA-Z][a-zA-Z0-9._]{2,20}$/;
+    if (!usernameRegex.test(usernameClean)) {
       return this.showToast('Nome de usuário inválido.');
     }
 
@@ -54,6 +68,14 @@ export class SignupPage {
       return this.showToast('Esse nome de usuário já está em uso.');
     }
 
+    if (this.password.length < 6) {
+      return this.showToast('A senha deve ter pelo menos 6 caracteres.');
+    }
+
+    if (this.password !== this.confirmPassword) {
+      return this.showToast('As senhas não conferem.');
+    }
+
     this.loading = true;
 
     try {
@@ -62,43 +84,49 @@ export class SignupPage {
         this.email,
         this.password
       );
-
       const user = userCredential.user;
 
-      await updateProfile(user, {
-        displayName: this.fullName
-      });
+      await updateProfile(user, {displayName: this.fullName });
 
       await this.firestoreService.set('users', user.uid, {
         uid: user.uid,
         email: this.email,
-        username: usernameLower,
+        username: usernameClean,
         fullName: this.fullName,
-        phone: this.phone,
+        phone: cleanedPhone,
         createdAt: new Date()
       });
 
-      await this.firestoreService.set('usernames', usernameLower, {
+      await this.firestoreService.set('usernames', usernameClean, {
         uid: user.uid
       });
 
       this.showToast('Conta criada com sucesso!');
-
       this.router.navigate(['/login']);
-
     } catch (err: any) {
-      console.error("🔥 Erro completo:", err);
-      console.error("🔥 Código:", err.code);
-      console.error("🔥 Mensagem:", err.message);
+      console.error(err);
       this.showToast(this.getErrorMessage(err.code));
-
     } finally {
       this.loading = false;
     }
   }
 
   formatPhone() {
-    this.phone = this.phone.replace(/\D/g, '');
+    let v = this.phone.replace(/\D/g, '');
+
+    if (v.length > 11) v = v.slice(0,11);
+
+    if (v.length <=10 ) {
+      this.phone = v.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+    } else {
+      this.phone = v.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
+    }
+  }
+
+  onUsernameInput() {
+    if (!this.username.startsWith('@')) {
+      this.username = '@' + this.username;
+    }
   }
 
   async showToast(message:string) {
