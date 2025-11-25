@@ -3,8 +3,7 @@
     <!-- Logo e Título -->
     <div class="header-section">
       <div class="logo-container">
-        <div class="logo-icon"></div>
-        <div class="logo-text">Bookly</div>
+        <img class="logo-icon" src="../../../assets/icon/logo_bookly_celivro.png">
       </div>
       <h1 class="app-title">Bookly</h1>
     </div>
@@ -39,6 +38,12 @@
           Continuar
         </ion-button>
       </div>
+      <div>
+        <p class="signup-text">
+          Não tem uma conta? 
+          <a [routerLink]="['/register']" class="signup-link">Inscreva-se</a>
+        </p>
+      </div>
 
       <!-- Divisor -->
       <div class="divider-section">
@@ -50,13 +55,8 @@
       <!-- Botões Sociais -->
       <div class="social-buttons">
         <ion-button expand="block" fill="clear" class="social-button google-button" (click)="onGoogleLogin()">
-          <div class="google-icon"></div>
+        <ion-icon class="google-icon" name="logo-google"></ion-icon>
           Continuar com o Google
-        </ion-button>
-
-        <ion-button expand="block" fill="clear" class="social-button apple-button" (click)="onAppleLogin()">
-          <div class="apple-icon"></div>
-          Continuar com a Apple
         </ion-button>
       </div>
 

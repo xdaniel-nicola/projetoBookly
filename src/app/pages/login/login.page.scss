@@ -11,7 +11,7 @@
 }
 
 .header-section {
-  padding-top: 44px;
+  padding-top: 22px;
   margin-bottom: 40px;
 }
 
@@ -20,15 +20,14 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .logo-icon {
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, #333 0%, #666 100%);
-  border-radius: 8px;
-  margin-bottom: 8px;
+  width: 120px;
+  height: 120px;
+  border-radius: 3px;
+  margin-bottom: 3px;
 }
 
 .logo-text {
@@ -157,15 +156,6 @@
   height: 20px;
   border-radius: 4px;
   margin-right: 8px;
-}
-
-.google-icon {
-  background: linear-gradient(135deg, #4285F4 0%, #34A853 50%, #FBBC05 75%, #EB4335 100%);
-}
-
-.apple-icon {
-  background: #000000;
-  border-radius: 50%;
 }
 
 .terms-text {
