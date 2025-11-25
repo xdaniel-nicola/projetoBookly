@@ -69,7 +69,7 @@ export class SignupPage {
         displayName: this.fullName
       });
 
-      await this.firestoreService.update('users', user.uid, {
+      await this.firestoreService.set('users', user.uid, {
         uid: user.uid,
         email: this.email,
         username: usernameLower,
@@ -78,7 +78,7 @@ export class SignupPage {
         createdAt: new Date()
       });
 
-      await this.firestoreService.update('usernames', usernameLower, {
+      await this.firestoreService.set('usernames', usernameLower, {
         uid: user.uid
       });
 
