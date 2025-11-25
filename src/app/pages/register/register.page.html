@@ -36,6 +36,15 @@
         ></ion-input>
 
         <ion-input
+          type="text"
+          [(ngModel)]="username"
+          placeholder="Nome de usuário (@seunome)"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
+
+
+        <ion-input
           type="tel"
           [(ngModel)]="phone"
           placeholder="Número de telefone (**) *****-****"
@@ -63,6 +72,12 @@
         <ion-button expand="block" class="continue-button" (click)="onContinue()">
           Continuar
         </ion-button>
+        <div>
+        <p class="signup-text">
+          Já tem uma conta? 
+          <a [routerLink]="['/login']" class="signup-link">Entrar</a>
+        </p>
+      </div>
       </div>
     </div>
   </div>
