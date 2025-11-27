@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent
   ,IonItem
   ,IonSearchbar
+  ,IonLabel
+  ,IonThumbnail
+  ,IonList
  } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../../explore-container/explore-container.component';
+import { BooksService } from '../../services/books.service';
 
 @Component({
   selector: 'app-tab2',
@@ -12,9 +16,12 @@ import { ExploreContainerComponent } from '../../explore-container/explore-conta
   imports: [IonHeader, IonToolbar, IonTitle, IonContent
     ,IonItem
     ,IonSearchbar
+    ,IonLabel
+    ,IonThumbnail
+    ,IonList
   ]
 })
-export class Tab2Page implements OnInit {
+export class Tab2Page {
   allBooks = [
     {
       id: 1,
@@ -116,26 +123,41 @@ export class Tab2Page implements OnInit {
     }
   ];
 
-  filteredBooks = [...this.allBooks];
-  searchQuery: string = '';
-  
-  constructor() {}
+ searchResults: any[] = [];
+ 
+   constructor(private booksService: BooksService) {}
+ 
+   async search(query: string | null | undefined) {
+     if (!query || query.trim() === '') {
+       this.searchResults = [];
+       return;
+     }
+ 
+     this.booksService.searchBooks(query).subscribe({
+       next: (res: any) => {
+         this.searchResults = res.items || [];
+       },
+       error: (err) => {
+         console.error('Erro ao buscar livros: ', err);
+       }
+     })
+   }
 
-  items: string[] = [];
+   getBestImage(book: any): string | null {
+  if (!book?.volumeInfo?.imageLinks) return null;
 
-  ngOnInit() {}
+  const links = book.volumeInfo.imageLinks;
 
-  onSearchInput(event: any) {
-    this.searchQuery = event.target.value.toLowerCase();
-    this.filteredBooks = this.allBooks.filter(book => 
-      book.title.toLowerCase().includes(this.searchQuery) ||
-      book.author.toLowerCase().includes(this.searchQuery)
-    );
-  }
-
-  onBookClick(book: any) {
-    console.log('Livro clicado:', book)
-  }
-
-
+  // ordem de prioridade do maior para o menor
+  return (
+    links.extraLarge ||
+    links.large ||
+    links.medium ||
+    links.small ||
+    links.thumbnail ||
+    links.smallThumbnail ||
+    null
+  );
 }
+
+ }

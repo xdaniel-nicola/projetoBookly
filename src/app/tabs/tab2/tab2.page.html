@@ -13,29 +13,40 @@
       <ion-title size="large">Tab 2</ion-title>
     </ion-toolbar>
   </ion-header>
-    <ion-item> 
-      <ion-searchbar show-clear-button="always" placeholder="Procure por livros, autores..."></ion-searchbar>
-    </ion-item>
-    <!-- lista de livros -->
-    <div class="grid-container">
-      @for (book of filteredBooks; track book.id) {
-        <div class="grid-item" (click)="onBookClick(book)">
-          <img [src]="book.image" [alt]="book.title" />
-        </div>
-      }
-    </div>
-     <!-- <ion-list>
-      @for (book of filteredBooks; track book.id) {
-        <ion-item (click)="onBookClick(book)">
-          <ion-thumbnail slot="start">
-            <img [src]="book.image" [alt]="book.title" />
-          </ion-thumbnail>
+    <div class="search-container">
+    <ion-searchbar 
+      placeholder="Buscar livros, autores..."
+      debounce="300"
+      (ionInput)="search($event.detail.value)"
+      class="custom-searchbar">
+    </ion-searchbar>
+  </div>
+
+@if (searchResults.length > 0) {
+  <div class="covers-grid">
+
+    <ion-list>
+
+      @for (book of searchResults; track book.id ?? book.volumeInfo.title ?? $index) {
+        <ion-item>
+
+          @if (book.volumeInfo.imageLinks?.thumbnail) {
+            <div class="cover-card" slot="start">
+              <img [src]="getBestImage(book)">
+            </div>
+          }
+
           <ion-label>
-            <h2>{{ book.title }}</h2>
-            <p>{{ book.author }}</p>
+            <h2>{{ book.volumeInfo.title }}</h2>
+            <p>{{ book.volumeInfo.authors?.join(', ') }}</p>
           </ion-label>
+
         </ion-item>
       }
-     </ion-list> -->
+
+    </ion-list>
+
+  </div>
+}
 
 </ion-content>
