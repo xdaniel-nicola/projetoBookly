@@ -23,7 +23,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent
   ,IonSegment
   ,IonSegmentButton
  } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { ExploreContainerComponent } from '../../explore-container/explore-container.component';
 
 @Component({
   selector: 'app-tab1',

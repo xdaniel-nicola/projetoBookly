@@ -1,17 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RegisterPage } from './register.page';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
-describe('RegisterPage', () => {
-  let component: RegisterPage;
-  let fixture: ComponentFixture<RegisterPage>;
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'],
+})
+export class LoginPage {
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RegisterPage);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  email: string = '';
+  password: string = '';
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  constructor(private router: Router) {}
+
+  login() {
+    if (!this.email || !this.password) {
+      alert("Preencha email e senha");
+      return;
+    }
+
+    // Simulação de login
+    console.log("Login:", this.email, this.password);
+
+    // Caminho da sua home dentro das tabs
+    this.router.navigate(['/tabs/tab1']);
+  }
+}

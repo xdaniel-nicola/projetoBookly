@@ -1,43 +1,53 @@
 import { Routes } from '@angular/router';
-import { TabsPage } from './tabs/tabs.page'; // Garante que este ficheiro exporta 'TabsPage'
+import { TabsPage } from './tabs/tabs.page';
 
 export const routes: Routes = [
+
+  // 🔥 Redirecionamento inicial
   {
-    path: '', // Este path define o layout principal das abas
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+
+  // 🔥 Tela de Login
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.page').then(m => m.SigninPage)
+  },
+
+  {
+    path: 'register',
+    loadComponent: () => import('./pages/register/register.page').then(m => m.SignupPage)
+  },
+
+  // 🔥 Layout das Tabs
+  {
+    path: 'tabs',
     component: TabsPage,
     children: [
-      // 1. Rota da Tab 1
-      {
-        path: 'tab1',
-        loadComponent: () => import('./tab1/tab1.page').then(m => m.Tab1Page)
+      { 
+        path: 'tab1', loadComponent: () => import('./tabs/tab1/tab1.page').then(m => m.Tab1Page)
       },
-      // 2. Rota da Tab 2
       {
-        path: 'tab2',
-        loadComponent: () => import('./tab2/tab2.page').then(m => m.Tab2Page)
+        path: 'tab2', loadComponent: () => import('./tabs/tab2/tab2.page').then(m => m.Tab2Page)
       },
-      // 3. Rota da Tab 3
       {
-        path: 'tab3',
-        loadComponent: () => import('./tab3/tab3.page').then(m => m.Tab3Page)
+        path: 'tab3', loadComponent: () => import('./tabs/tab3/tab3.page').then(m => m.Tab3Page)
       },
-      // 4. Rota da Tab 4
       {
-        path: 'tab4',
-        loadComponent: () => import('./tab4/tab4.page').then(m => m.Tab4Page)
+        path: 'tab4', loadComponent: () => import('./tabs/tab4/tab4.page').then(m => m.Tab4Page)
       },
-      // 5. Rota da Tab 5
       {
-        path: 'tab5',
-        loadComponent: () => import('./tab5/tab5.page').then(m => m.Tab5Page)
+        path: 'tab5', loadComponent: () => import('./tabs/tab5/tab5.page').then(m => m.Tab5Page)
       },
-      // Rota de Redirecionamento Padrão (Redireciona para a primeira aba)
-      {
-        path: '',
-        redirectTo: 'tab1', // CORREÇÃO: Usa o caminho relativo
-        pathMatch: 'full'
-      }
+
+      { path: '', redirectTo: 'tab1', pathMatch: 'full' }
     ]
+  },
+  {
+    path: 'editprofile',
+    loadComponent: () => import('./pages/editprofile/editprofile.page').then( m => m.EditProfilePage)
   }
+
 ];
-// Certifique-se de que NÃO HÁ NADA abaixo deste ponto no arquivo.

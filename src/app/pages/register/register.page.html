@@ -1,47 +1,84 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Criar Conta</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="signup-content">
+  <div class="signup-container">
+    <!-- Logo e Título -->
+    <div class="header-section">
+      <div class="logo-container">
+        <img class="logo-icon" src="../../../assets/icon/logo_bookly_celivro.png">
+      </div>
+      <h1 class="app-title">Bookly</h1>
+    </div>
 
-<ion-content class="ion-padding">
+    <!-- Conteúdo Principal -->
+    <div class="content-wrapper">
+      <!-- Textos de Cabeçalho -->
+      <div class="copy-section">
+        <h2 class="title">Criar uma conta</h2>
+        <p class="subtitle">Preencha os próximos campos para se cadastrar</p>
+      </div>
 
-  <ion-input
-    label="Nome"
-    label-placement="floating"
-    [(ngModel)]="nome">
-  </ion-input>
+      <!-- Formulário -->
+      <div class="form-section">
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="email@dominio.com"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
-  <ion-input
-    label="Email"
-    label-placement="floating"
-    [(ngModel)]="email"
-    type="email"
-    class="ion-margin-top">
-  </ion-input>
+        <ion-input
+          type="text"
+          [(ngModel)]="fullName"
+          placeholder="Nome completo"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
-  <ion-input
-    label="Senha"
-    label-placement="floating"
-    [(ngModel)]="senha"
-    type="password"
-    class="ion-margin-top">
-  </ion-input>
+        <ion-input
+          type="text"
+          [(ngModel)]="username"
+          placeholder="Nome de usuário (@seunome)"
+          class="custom-input"
+          fill="outline"
+          (ionInput)="onUsernameInput()"
+        ></ion-input>
 
-  <ion-input
-    label="Confirmar Senha"
-    label-placement="floating"
-    [(ngModel)]="confirmar"
-    type="password"
-    class="ion-margin-top">
-  </ion-input>
 
-  <ion-button expand="block" class="ion-margin-top" (click)="cadastrar()">
-    Cadastrar
-  </ion-button>
+        <ion-input
+          type="tel"
+          [(ngModel)]="phone"
+          placeholder="Número de telefone (**) *****-****"
+          class="custom-input"
+          fill="outline"
+          (ionBlur)="formatPhone()"
+        ></ion-input>
 
-  <ion-button fill="clear" expand="block" routerLink="/login">
-    Já tenho conta
-  </ion-button>
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          placeholder="Senha"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
 
+        <ion-input
+          type="password"
+          [(ngModel)]="confirmPassword"
+          placeholder="Confirmar senha"
+          class="custom-input"
+          fill="outline"
+        ></ion-input>
+
+        <ion-button expand="block" class="continue-button" (click)="onContinue()">
+          Continuar
+        </ion-button>
+        <div>
+        <p class="signup-text">
+          Já tem uma conta? 
+          <a [routerLink]="['/login']" class="signup-link">Entrar</a>
+        </p>
+      </div>
+      </div>
+    </div>
+  </div>
 </ion-content>

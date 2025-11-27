@@ -1,0 +1,101 @@
+<ion-content [fullscreen]="true" class="edit-profile-content">
+  <div class="profile-container">
+    <!-- Header com foto de perfil -->
+    <div class="profile-header">
+      <div class="profile-image-wrapper">
+        <div class="profile-image">
+          <img src="../../../assets/perfis/foto.png" alt="Profile" />
+        </div>
+        <button class="add-photo-btn" (click)="onChangeProfilePicture()">
+          <ion-icon name="add-circle"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulário -->
+    <div class="form-container">
+      <!-- Email -->
+      <div class="input-field">
+        <div class="field-content">
+          <span class="field-label">Email</span>
+          <input 
+            type="email" 
+            [(ngModel)]="profile.email" 
+            placeholder="email@dominio.com"
+            class="field-input"
+          />
+        </div>
+      </div>
+
+      <!-- Nome -->
+      <div class="input-field">
+        <div class="field-content">
+          <span class="field-label">Nome</span>
+          <input 
+            type="text" 
+            [(ngModel)]="profile.fullName" 
+            placeholder="Nome completo"
+            class="field-input"
+          />
+        </div>
+      </div>
+
+      <!-- Celular -->
+      <div class="input-field">
+        <div class="field-content">
+          <span class="field-label">Celular</span>
+          <input 
+            type="tel" 
+            [(ngModel)]="profile.phone" 
+            placeholder="(**) *****-****"
+            class="field-input"
+          />
+        </div>
+      </div>
+
+      <!-- username -->
+      <div class="input-field">
+        <div class="field-content">
+          <span class="field-label">Username</span>
+          <input 
+            type="text" 
+            [(ngModel)]="profile.username" 
+            placeholder="Nome de usuário (@seunome)"
+            class="field-input"
+          />
+        </div>
+      </div>
+
+      <!-- Senha -->
+      <div class="input-field">
+        <div class="field-content">
+          <span class="field-label">Senha</span>
+          <input 
+            type="password" 
+            [(ngModel)]="profile.password" 
+            placeholder="Senha"
+            class="field-input"
+          />
+        </div>
+      </div>
+
+      <!-- Confirmar Senha -->
+      <div class="input-field">
+        <div class="field-content">
+          <span class="field-label">Confirmar senha</span>
+          <input 
+            type="password" 
+            [(ngModel)]="profile.confirmPassword" 
+            placeholder="Confirmar senha"
+            class="field-input"
+          />
+        </div>
+      </div>
+
+      <!-- Botão Salvar -->
+      <button class="save-button" (click)="onSalvar()">
+        Salvar
+      </button>
+    </div>
+  </div>
+</ion-content>
