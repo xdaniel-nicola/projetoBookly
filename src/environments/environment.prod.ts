@@ -10,3 +10,9 @@ export const environment = {
   measurementId: "G-K8CLXF0Q9W"
   }
 };
+
+// google books api
+export const booksApi = {
+  production: true,
+  googleBooksApiKey: 'AIzaSyDqzrxdPfJZ557uj76Z6vfFYLpIIgdi5nU'
+};
