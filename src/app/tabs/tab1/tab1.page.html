@@ -14,14 +14,43 @@
   </ion-header>
 
   <!-- barra de pesquisa -->
-    <div class="search-container">
-      <ion-searchbar 
-        placeholder="Buscar livros, autores..." 
-        debounce="300" 
-        (ionInput)="onSearchInput($event)" 
-        class="custom-searchbar">
-      </ion-searchbar>
-    </div>
+  <div class="search-container">
+    <ion-searchbar 
+      placeholder="Buscar livros, autores..."
+      debounce="300"
+      (ionInput)="search($event.detail.value)"
+      class="custom-searchbar">
+    </ion-searchbar>
+  </div>
+
+@if (searchResults.length > 0) {
+  <div class="search-results">
+
+    <ion-list>
+
+      @for (book of searchResults; track book.id ?? book.volumeInfo.title ?? $index) {
+        <ion-item>
+
+          @if (book.volumeInfo.imageLinks?.thumbnail) {
+            <ion-thumbnail slot="start">
+              <img [src]="book.volumeInfo.imageLinks.thumbnail">
+            </ion-thumbnail>
+          }
+
+          <ion-label>
+            <h2>{{ book.volumeInfo.title }}</h2>
+            <p>{{ book.volumeInfo.authors?.join(', ') }}</p>
+          </ion-label>
+
+        </ion-item>
+      }
+
+    </ion-list>
+
+  </div>
+}
+
+
 
   <!-- menu de categorias -->
    <div class="category-menu">
@@ -45,9 +74,89 @@
       </ion-segment>
    </div>
 
+  <!-- TERROR -->
+  <div class="book-section">
+    <div class="section-header">
+      <h2>Terror</h2>
+      <ion-icon name="chevron-forward"></ion-icon>
+    </div>
+
+    <div class="book-scroll">
+      <div class="book-card" *ngFor="let book of terrorBooks">
+        <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+        <h4>{{ book.volumeInfo?.title }}</h4>
+        <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVENTURA -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Aventura</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
+  </div>
+
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of aventuraBooks">
+      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+      <h4>{{ book.volumeInfo?.title }}</h4>
+      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- ROMANCE -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Romance</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
+  </div>
+
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of romanceBooks">
+      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+      <h4>{{ book.volumeInfo?.title }}</h4>
+      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- FANTASIA -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Fantasia</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
+  </div>
+
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of fantasiaBooks">
+      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+      <h4>{{ book.volumeInfo?.title }}</h4>
+      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- FICÇÃO -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Ficção</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
+  </div>
+
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of ficcaoBooks">
+      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+      <h4>{{ book.volumeInfo?.title }}</h4>
+      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
+
 
   <!-- seçao de autores -->
- @for (author of authors; track author.name) {
+ <!-- @for (author of authors; track author.name) {
   <div class="author-card">
     <div class="author-info">
       <h2>{{ author.name }}</h2>
@@ -60,7 +169,7 @@
       }
     </div>
   </div>
-}
+} -->
   
    <!-- seçao de destaques -->
     <!-- <div class="featured-section">
@@ -83,7 +192,7 @@
 
     <!-- seçao de categorias -->
      <!-- terror -->
-      <div class="book-section">
+      <!-- <div class="book-section">
         <div class="section-header" (click)="onSectionClick('terror')">
           <h2>Terror</h2>
           <ion-icon name="chevron-forward"></ion-icon>
@@ -103,10 +212,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- açao e aventura -->
-      <div class="book-section">
+      <!-- <div class="book-section">
         <div class="section-header" (click)="onSectionClick('acao-aventura')">
           <h2>Ação e Aventura</h2>
           <ion-icon name="chevron-forward"></ion-icon>
@@ -126,10 +235,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- romance -->
-      <div class="book-section">
+      <!-- <div class="book-section">
         <div class="section-header" (click)="onSectionClick('romance')">
           <h2>Romance</h2>
           <ion-icon name="chevron-forward"></ion-icon>
@@ -149,7 +258,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       
   
   
