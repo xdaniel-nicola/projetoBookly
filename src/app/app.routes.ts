@@ -44,5 +44,10 @@ export const routes: Routes = [
 
       { path: '', redirectTo: 'tab1', pathMatch: 'full' }
     ]
+  },
+  {
+    path: 'editprofile',
+    loadComponent: () => import('./pages/editprofile/editprofile.page').then( m => m.EditProfilePage)
   }
+
 ];

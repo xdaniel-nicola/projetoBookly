@@ -2,6 +2,7 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 import { 
   IonContent, 
   IonHeader, 
@@ -55,8 +56,14 @@ export class Tab5Page implements OnInit {
   
   userData: any = null;
 
-  constructor(private userService: UserService, private ngZone: NgZone) { }
+  constructor(private userService: UserService, private ngZone: NgZone, private router: Router) { }
 
+
+  editarPerfil() {
+    this.router.navigate(['/editprofile'], {
+    state: { user: this.userData}
+    });
+  }
   async ngOnInit() {
     // Garante que todos os livros sejam carregados na inicialização
     // this.userData = await this.userService.getCurrentUserData();

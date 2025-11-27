@@ -1,0 +1,162 @@
+.edit-profile-content {
+  --background: #ffffff;
+}
+
+.profile-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-header {
+  background-color: #828282;
+  height: 201px;
+  width: 100%;
+  position: relative;
+}
+
+.profile-image-wrapper {
+  position: absolute;
+  bottom: -44px;
+  left: 0;
+  width: 88px;
+  height: 88px;
+}
+
+.profile-image {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #c8c8c8;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.add-photo-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 29px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(130, 130, 130, 0.5);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  
+  ion-icon {
+    font-size: 30px;
+    color: #000000;
+  }
+}
+
+.form-container {
+  padding: 68px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 1;
+}
+
+.input-field {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  height: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.field-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  width: 100%;
+  height: 100%;
+}
+
+.field-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000000;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.field-input {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #828282;
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  width: 100%;
+  
+  &::placeholder {
+    color: #828282;
+  }
+}
+
+.save-button {
+  background-color: #000000;
+  border: none;
+  border-radius: 8px;
+  height: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+// Tab bar customization
+ion-tab-bar {
+  --background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+  height: 78px;
+  padding-bottom: 20px;
+}
+
+ion-tab-button {
+  --color: rgba(0, 0, 0, 0.5);
+  --color-selected: #000000;
+  
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+ion-badge {
+  position: absolute;
+  top: 6px;
+  right: 14px;
+  min-width: 18px;
+  height: 14px;
+  border-radius: 10px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border: 2px solid #ffffff;
+}
