@@ -97,7 +97,6 @@ export class EditProfilePage {
       this.showToast('Erro ao atualizar o perfil: ' + error.message);
     }
     loading.dismiss();
-    // Implementar lógica de salvamento
   }
 
   async showToast(message: string) {
