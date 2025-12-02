@@ -18,6 +18,7 @@
       <div class="review-card">
         <div class="review-user-data">
           <h3 class="review-owner">Avaliação de <strong>{{ review.user }}</strong></h3>
+          <p class="review-status">Status: {{ review.book.status }}</p>
           <h5 class="review-title">{{ review.titleReview }}</h5>
           <p class="review-text">{{ review.comment }}</p>
         </div>
