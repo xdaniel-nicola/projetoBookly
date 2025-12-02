@@ -65,23 +65,23 @@ export class EditpostPage implements OnInit {
   constructor(private router: Router, private postsService: PostsService) {}
 
   ngOnInit() {
-    const nav = this.router.getCurrentNavigation();
+    const nav = this.router.currentNavigation();
     const state = nav?.extras.state as any;
-    if (state?.book) {
-      const book = state.book;
-      this.bookId = book.id;
-      this.bookName = book.titleReview;
-      this.bookAuthor = book.book.author;
-      this.bookStatus = book.book.status;
-      this.bookCover = book.book.image;
-      this.bookTitle = book.book.title;
-      this.bookType = book.book.type;
-      this.releaseDate = book.book.releaseDate;
-      this.synopsis = book.book.synopsis;
-      this.whereToFind = book.book.whereToFind;
-      this.startDate = book.book.startDate;
-      this.reviewComment = book.comment;
-      this.rating = book.book.rating;
+    if (state?.post) {
+      const post = state.post;
+      this.bookId = post.id;
+      this.bookName = post.titleReview;
+      this.reviewComment = post.comment;
+      this.bookAuthor = post.book.author;
+      this.bookStatus = post.book.status;
+      this.bookCover = post.book.image;
+      this.bookTitle = post.book.title;
+      this.bookType = post.book.type;
+      this.releaseDate = post.book.releaseDate;
+      this.synopsis = post.book.synopsis;
+      this.whereToFind = post.book.whereToFind;
+      this.startDate = post.book.startDate;
+      this.rating = post.book.rating;
     }
   }
 
