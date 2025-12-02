@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BooksService } from '../../services/books.service'
+import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent
   ,IonItem
   ,IonInput
@@ -49,7 +50,13 @@ export class Tab1Page implements OnInit{
   books: any[] = [];
   searchResults: any[] = [];
 
-  constructor(private booksService: BooksService) {}
+  constructor(private booksService: BooksService, private router: Router) {}
+
+  openBook(book: any) {
+    this.router.navigate(['/post-books', book.id], {
+      state: { book }
+    })
+  }
 
   ngOnInit(): void {
     this.getTerrorBooks();
