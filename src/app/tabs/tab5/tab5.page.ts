@@ -78,15 +78,15 @@ export class Tab5Page implements OnInit {
     private actionSheetCtrl: ActionSheetController
   ) {}
 
-  async openBookOptions(book: any) {
+  async openBookOptions(post: any) {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: book.title,
+      header: post.book.title,
       buttons: [
         {
           text: 'Editar',
           icon: 'create',
           handler: () => {
-            this.router.navigate(['/editpost'], { state: { book }});
+            this.router.navigate(['/editpost'], { state: { post }});
           }
         },
         {
@@ -94,9 +94,9 @@ export class Tab5Page implements OnInit {
           role: 'destructive',
           icon: 'trash',
           handler: async () => {
-            await this.postsService.deletePost(book.id);
-            this.booksByStatus[book.category] = this.booksByStatus[book.category].filter(
-              b => b.id !== book.id
+            await this.postsService.deletePost(post.id);
+            this.booksByStatus[post.book.category] = this.booksByStatus[post.book.category].filter(
+              b => b.id !== post.id
             );
           }  
         },
@@ -140,7 +140,7 @@ export class Tab5Page implements OnInit {
         this.booksByStatus[status] = [];
         this.statusVisibility[status] = false;
       }
-      this.booksByStatus[status].push(p.book);
+      this.booksByStatus[status].push(p);
 
       if(p.book.rating || p.comment) {
         this.evaluatedBooks.push({
