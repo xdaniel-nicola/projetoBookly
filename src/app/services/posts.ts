@@ -9,7 +9,10 @@ import { Firestore,
   arrayUnion, 
   arrayRemove,
   getDocs,
-  getDoc} from '@angular/fire/firestore';
+  getDoc,
+  query,
+  where,
+  deleteDoc} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Notifications } from '../services/notifications'
 
@@ -60,7 +63,17 @@ export class PostsService {
     return addDoc(postsRef, formattedReview);
   }
 
- getPosts(): Observable<any[]> {
+  async getUserPosts(userId: string) {
+    const postsRef = collection(this.firestore, 'posts');
+    const q = query(postsRef, where('userId', '==', userId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  }
+
+  getPosts(): Observable<any[]> {
     return new Observable(observer => {
       const postsRef = collection(this.firestore, 'posts');
       const currentUser = this.auth.currentUser;
@@ -186,5 +199,15 @@ async toggleLike(review: any) {
     } catch (error) {
       console.error("Erro ao adicionar comentário:", error);
     }
+  }
+
+  async deletePost(postId: string){
+    const postDoc = doc(this.firestore, `posts/${postId}`);
+    await deleteDoc(postDoc);
+  }
+
+  async updatePost(postId: string, updatedData: any) {
+    const postDoc = doc(this.firestore, `posts/${postId}`);
+    await updateDoc(postDoc, updatedData);
   }
 }
