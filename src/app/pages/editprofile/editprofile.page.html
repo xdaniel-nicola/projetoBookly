@@ -15,10 +15,13 @@
     <div class="profile-header">
       <div class="profile-image-wrapper">
         <div class="profile-image">
-          <img src="../../../assets/perfis/foto.png" alt="Profile" />
+          <img [src]="avatarPreview" class="profile-photo" alt="Profile" />
         </div>
-        <button class="add-photo-btn" (click)="onChangeProfilePicture()">
+        <button class="add-photo-btn" (click)="generateNewAvatar()">
           <ion-icon name="add-circle"></ion-icon>
+        </button>
+        <button class="save-photo-btn" (click)="saveAvatar()">
+          <ion-icon name="save-outline"></ion-icon>
         </button>
       </div>
     </div>

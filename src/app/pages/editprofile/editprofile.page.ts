@@ -5,6 +5,8 @@ import { IonicModule, ToastController, LoadingController } from '@ionic/angular'
 import { Router } from '@angular/router';
 import { Auth, updateProfile, updateEmail, updatePassword } from '@angular/fire/auth';
 import { FirestoreService } from '../../services/firestore';
+import { Permissions } from 'src/app/services/permissions';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-editprofile',
@@ -14,6 +16,7 @@ import { FirestoreService } from '../../services/firestore';
   imports: [CommonModule, FormsModule, IonicModule]
 })
 export class EditProfilePage {
+  userData: any = {};
   profile: any = {
     uid: '',
     email: '',
@@ -29,8 +32,9 @@ export class EditProfilePage {
     private auth: Auth,
     private firestore: FirestoreService,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
-    
+    private loadingCtrl: LoadingController,
+    private permissionsService: Permissions,
+    private userService: UserService
   ) {
     const nav = this.router.currentNavigation();
     console.log('Dados recebidos', this.profile);
@@ -38,6 +42,8 @@ export class EditProfilePage {
       this.profile = nav.extras.state['user'];
     }
   }
+
+ 
   goBack() {
     this.router.navigate(['/tabs/tab5']);
     console.log('Going back');
@@ -113,8 +119,23 @@ export class EditProfilePage {
   }
 
 
-  onChangeProfilePicture() {
-    console.log('Mudar foto de perfil');
-    // Implementar lógica de mudança de foto
+  avatarPreview: string | null = null;
+
+  generateNewAvatar() {
+    const seed = Math.random().toString(36).substring(2,15);
+    this.avatarPreview = `https://api.dicebear.com/7.x/thumbs/svg?seed=${seed}`;
+    this.profile.photoURL = this.avatarPreview;
   }
+
+  async saveAvatar() {
+    const user = this.auth.currentUser;
+    if (!user) return;
+
+    await this.userService.updateUser(user.uid, {
+      photoURL: this.profile.photoURL
+    });
+
+    console.log("Avatar salvo com sucesso")
+  }
+
 }

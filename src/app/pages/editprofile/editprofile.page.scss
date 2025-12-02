@@ -41,11 +41,31 @@
 .add-photo-btn {
   position: absolute;
   bottom: 12px;
-  left: 29px;
+  left: 90px;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: rgba(130, 130, 130, 0.5);
+  background-color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  
+  ion-icon {
+    font-size: 30px;
+    color: #000000;
+  }
+}
+
+.save-photo-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 130px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ffffff;
   border: none;
   display: flex;
   align-items: center;
