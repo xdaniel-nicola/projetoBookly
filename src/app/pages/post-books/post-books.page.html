@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Postar livro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="form-container">
+    
+    <!-- NOME -->
+    <ion-item lines="full">
+      <ion-label position="stacked" class="field-label">TÍTULO DA AVALIAÇÃO</ion-label>
+      <ion-input
+        [(ngModel)]="bookName"
+        placeholder="Adicionar título da avaliação"
+        class="custom-input"
+      ></ion-input>
+    </ion-item>
+
+    <!-- AVALIAÇÃO -->
+    <ion-item lines="full">
+      <ion-label position="stacked" class="field-label">AVALIAÇÃO</ion-label>
+      <div class="rating-container">
+        <div class="stars">
+          <ion-icon 
+            *ngFor="let star of [1,2,3,4,5]"
+            name="star-outline"
+            [class.filled]="star <= rating"
+            (click)="setRating(star)"
+          ></ion-icon>
+        </div>
+      </div>
+      <div class="rating-input">
+        <ion-input 
+        class="custom-input" 
+        placeholder="O que você achou do livro?"
+        [(ngModel)]="reviewComment"
+        ></ion-input>
+      </div>
+    </ion-item>
+
+    <!-- AUTOR(A) -->
+    <ion-item lines="full">
+      <ion-label position="stacked" class="field-label">AUTOR(A)</ion-label>
+      <ion-input
+        [(ngModel)]="bookAuthor"
+        placeholder="Adicionar autor"
+        class="custom-input"
+      ></ion-input>
+    </ion-item>
+
+    <!-- STATUS -->
+    <ion-item lines="full">
+      <ion-label position="stacked" class="field-label">STATUS</ion-label>
+      <ion-select
+        [(ngModel)]="bookStatus"
+        placeholder="Selecionar status"
+        interface="action-sheet"
+        (ionChange)="onStatusChange($event)"
+        class="custom-select"
+      >
+        <ion-select-option *ngFor="let status of statusOptions" [value]="status">
+          {{ status }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- CAPA E DESCRIÇÃO -->
+    <div class="book-info-section">
+      <div class="book-info-header">
+        <p class="header-title">CAPA</p>
+        <p class="header-description">DESCRIÇÃO</p>
+        <p class="header-date">DATA DE INÍCIO</p>
+      </div>
+      
+      <div class="book-details">
+        <!-- Capa do Livro -->
+        <div class="book-cover">
+          <img [src]="bookCover" alt="Book Cover" />
+        </div>
+
+        <!-- Informações do Livro -->
+        <div class="book-info">
+          <p class="info-label">{{ bookType }}</p>
+          <p class="info-value">{{ bookTitle }}</p>
+          
+          <p class="info-label">Data de Lançamento</p>
+          <p class="info-value">{{ releaseDate }}</p>
+          
+          <p class="info-label">Sinopse</p>
+          <div class="info-value synopsis">{{ synopsis }}</div>
+          
+          <p class="info-label">Onde encontrar</p>
+          <div class="info-value where-to-find">{{ whereToFind }}</div>
+        </div>
+
+        <!-- Data de Início -->
+        <div class="date-picker-section">
+          <p class="date-label">Data de Início</p>
+          <p class="date-display">{{ selectedDateDisplay }}</p>
+          <ion-icon name="calendar-outline" class="calendar-icon"></ion-icon>
+          <ion-datetime
+            [(ngModel)]="startDate"
+            presentation="date"
+            (ionChange)="onDateChange($event)"
+            class="hidden-datetime"
+          ></ion-datetime>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="footer-toolbar">
+    <ion-button 
+      expand="block" 
+      class="post-button"
+      (click)="postBook()"
+    >
+      Postar livro
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
