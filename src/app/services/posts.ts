@@ -3,20 +3,15 @@ import { Auth } from '@angular/fire/auth';
 import { Firestore, 
   Timestamp, 
   collection, 
-  collectionData, 
   addDoc, 
   doc, 
   updateDoc, 
   arrayUnion, 
   arrayRemove,
-  query,
-  orderBy,
   getDocs,
-  onSnapshot,
   getDoc} from '@angular/fire/firestore';
-import { Title } from '@angular/platform-browser';
-import { create, image } from 'ionicons/icons';
 import { Observable } from 'rxjs';
+import { Notifications } from '../services/notifications'
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +20,7 @@ export class PostsService {
   
   userData: any = null;
   
-  constructor(private firestore: Firestore, private auth: Auth) {}
+  constructor(private firestore: Firestore, private auth: Auth, private notificationsService: Notifications) {}
 
   async savePost(review: any) {
     const currentUser = this.auth.currentUser;
@@ -121,6 +116,15 @@ async toggleLike(review: any) {
           likes: review.likes + 1,
           likedBy: arrayUnion(currentUser.uid)
         });
+
+        await this.notificationsService.createLikeNotification(
+          review.id,
+          review.userId,
+          review.book.title,
+          review.book.image,
+          currentUser.displayName || currentUser.email || 'Usuário',
+          currentUser.photoURL || '../../../assets/perfis/homem.jpeg'
+        )
       } else {
         await updateDoc(reviewDoc, {
           likes: Math.max(0, review.likes - 1),
@@ -128,7 +132,8 @@ async toggleLike(review: any) {
         });
       }
       
-      
+      console.log("UID atual:", currentUser?.uid);
+
       console.log("Like atualizado com sucesso!");
     } catch (error) {
       console.error("Erro ao atualizar like:", error);
@@ -163,6 +168,19 @@ async toggleLike(review: any) {
       await updateDoc(reviewDoc, {
         comments: arrayUnion(comment)
       });
+
+      const postSnap = await getDoc(reviewDoc);
+      const postData: any = postSnap.data();
+
+      await this.notificationsService.createCommentNotification(
+        reviewId,
+        postData.userId,
+        postData.book.title,
+        postData.book.image,
+        comment.user,
+        comment.avatar,
+        comment.text
+      )
       
       console.log("Comentário adicionado com sucesso!");
     } catch (error) {

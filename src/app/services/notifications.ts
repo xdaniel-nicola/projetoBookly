@@ -5,12 +5,13 @@ import { Firestore
   ,addDoc
   ,query
   ,where
-  ,getDocs
   ,Timestamp
   ,orderBy
   ,updateDoc
   ,doc
+  ,getDocs
  } from '@angular/fire/firestore';
+//  import { getDocs } from 'firebase/firestore';
  import { Observable } from 'rxjs';
 
 
