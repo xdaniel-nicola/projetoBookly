@@ -29,7 +29,9 @@
             <p class="book-title">{{ review.book.author }}</p>
           </div>
         </div>
-      </div>
+          <p class="review-date">{{ review.book.startDate | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p class="review-date">{{review.book.rating}} <ion-icon name="star"></ion-icon></p>
+        </div>
         <!-- <div class="review-user-data">
           <h3 class="review-owner">Avaliação de <strong>{{ review.user }}</strong></h3>
           <h5 class="review-title">{{ review.titleReview }}</h5>
