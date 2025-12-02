@@ -38,6 +38,10 @@ export class EditProfilePage {
       this.profile = nav.extras.state['user'];
     }
   }
+  goBack() {
+    this.router.navigate(['/tabs/tab5']);
+    console.log('Going back');
+  }
   async ngOnInit() {
     const currentUser = this.auth.currentUser;
 
