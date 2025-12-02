@@ -8,8 +8,96 @@
  */
 
 import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
-import * as logger from "firebase-functions/logger";
+// import {onRequest} from "firebase-functions/https";
+// import * as logger from "firebase-functions/logger";
+import * as admin from "firebase-admin";
+import { onDocumentCreated } from "firebase-functions/v2/firestore";
+
+admin.initializeApp();
+
+// Enviar notificação
+async function sendPushNotification(
+  token: string,
+  title: string,
+  body: string,
+  data: any = {}
+) {
+  await admin.messaging().send({
+    token,
+    notification: { title, body },
+    data,
+  });
+}
+
+// Trigger — Like criado
+export const onLikeCreated = onDocumentCreated(
+  "posts/{postId}/likes/{likeId}",
+  async (event) => {
+    const snap = event.data;
+    const context = event.params;
+
+    if (!snap) return;
+
+    const like = snap.data();
+    const postId = context.postId;
+
+    const postRef = admin.firestore().collection("posts").doc(postId);
+    const postDoc = await postRef.get();
+
+    if (!postDoc.exists) return;
+
+    const postOwnerId = postDoc.data()?.userId;
+
+    const userRef = admin.firestore().collection("users").doc(postOwnerId);
+    const userDoc = await userRef.get();
+
+    const token = userDoc.data()?.fcmToken;
+    if (!token) return;
+
+    await sendPushNotification(
+      token,
+      "Nova curtida!",
+      `${like.userName} curtiu sua postagem.`,
+      { postId }
+    );
+  }
+);
+
+// Trigger — Comentário criado
+export const onCommentCreated = onDocumentCreated(
+  "posts/{postId}/comments/{commentId}",
+  async (event) => {
+    const snap = event.data;
+    const context = event.params;
+
+    if (!snap) return;
+
+    const comment = snap.data();
+    const postId = context.postId;
+
+    const postRef = admin.firestore().collection("posts").doc(postId);
+    const postDoc = await postRef.get();
+
+    if (!postDoc.exists) return;
+
+    const postOwnerId = postDoc.data()?.userId;
+
+    const userRef = admin.firestore().collection("users").doc(postOwnerId);
+    const userDoc = await userRef.get();
+
+    const token = userDoc.data()?.fcmToken;
+    if (!token) return;
+
+    await sendPushNotification(
+      token,
+      "Novo comentário!",
+      `${comment.userName} comentou na sua postagem.`,
+      { postId }
+    );
+  }
+);
+
+
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -24,7 +112,7 @@ import * as logger from "firebase-functions/logger";
 // functions should each use functions.runWith({ maxInstances: 10 }) instead.
 // In the v1 API, each function can only serve one request per container, so
 // this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+setGlobalOptions({maxInstances: 10});
 
 // export const helloWorld = onRequest((request, response) => {
 //   logger.info("Hello logs!", {structuredData: true});

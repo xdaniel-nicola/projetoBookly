@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore, 
   Timestamp, 
+  serverTimestamp,
   collection, 
   addDoc, 
   doc, 
@@ -114,92 +115,59 @@ export class PostsService {
 
 
 async toggleLike(review: any) {
-    try {
-      const currentUser = this.auth.currentUser;
-      if(!currentUser) {
-        console.error("Usuário não identificado");
-        return;
-      }
+  try {
+    const currentUser = this.auth.currentUser;
+    if (!currentUser) return;
 
-      console.log("Toggling like para:", review.id, "Liked:", review.liked);
-      const reviewDoc = doc(this.firestore, `posts/${review.id}`);
-      // const newLikes = review.liked ? review.likes + 1 : Math.max(0, review.likes - 1);
-      if (review.liked) {
-        await updateDoc(reviewDoc, {
-          likes: review.likes + 1,
-          likedBy: arrayUnion(currentUser.uid)
-        });
+    const reviewDoc = doc(this.firestore, `posts/${review.id}`);
 
-        await this.notificationsService.createLikeNotification(
-          review.id,
-          review.userId,
-          review.book.title,
-          review.book.image,
-          currentUser.displayName || currentUser.email || 'Usuário',
-          currentUser.photoURL || '../../../assets/perfis/homem.jpeg'
-        )
-      } else {
-        await updateDoc(reviewDoc, {
-          likes: Math.max(0, review.likes - 1),
-          likedBy: arrayRemove(currentUser.uid)
-        });
-      }
-      
-      console.log("UID atual:", currentUser?.uid);
-
-      console.log("Like atualizado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao atualizar like:", error);
-      // Reverte a mudança em caso de erro
-      review.liked = !review.liked;
-    }
-  }
-
-  async addComment(reviewId: any, commentText: any) {
-    try {
-      const currentUser = this.auth.currentUser;
-      if(!currentUser) {
-        console.error("Usuário não autenticado");
-        return;
-      }
-      const userDoc = await getDoc(doc(this.firestore, `users/${currentUser.uid}`))
-      const userData = userDoc.data();
-
-
-      const comment = {
-        userId: currentUser.uid,
-        user: userData?.['username'] || currentUser.displayName || currentUser.email || "Usuário",
-        avatar: userData?.['profileImage'] || currentUser.photoURL || "../../../assets/perfis/homem.jpeg",
-        text: commentText,
-        timestamp: Timestamp.now()
-      }
-
-
-      console.log("Adicionando comentário:", reviewId, comment);
-      const reviewDoc = doc(this.firestore, `posts/${reviewId}`);
-      
+    if (!review.liked) {
+      // ADICIONAR LIKE
       await updateDoc(reviewDoc, {
-        comments: arrayUnion(comment)
+        likes: review.likes + 1,
+        likedBy: arrayUnion(currentUser.uid)
       });
-
-      const postSnap = await getDoc(reviewDoc);
-      const postData: any = postSnap.data();
-
-      await this.notificationsService.createCommentNotification(
-        reviewId,
-        postData.userId,
-        postData.book.title,
-        postData.book.image,
-        comment.user,
-        comment.avatar,
-        comment.text
-      )
-      
-      console.log("Comentário adicionado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao adicionar comentário:", error);
+    } else {
+      // REMOVER LIKE
+      await updateDoc(reviewDoc, {
+        likes: Math.max(0, review.likes - 1),
+        likedBy: arrayRemove(currentUser.uid)
+      });
     }
+
+  } catch (error) {
+    console.error("Erro ao atualizar like:", error);
+    review.liked = !review.liked; // desfaz mudança local
   }
+}
+
+
+async addComment(reviewId: any, commentText: any) {
+  try {
+    const currentUser = this.auth.currentUser;
+    if (!currentUser) return;
+
+    const userDoc = await getDoc(doc(this.firestore, `users/${currentUser.uid}`));
+    const userData = userDoc.data();
+
+    const comment = {
+      userId: currentUser.uid,
+      user: userData?.['username'] || currentUser.displayName || currentUser.email,
+      avatar: userData?.['profileImage'] || currentUser.photoURL,
+      text: commentText,
+      timestamp: Timestamp.now()
+    };
+
+    const reviewDoc = doc(this.firestore, `posts/${reviewId}`);
+
+    await updateDoc(reviewDoc, {
+      comments: arrayUnion(comment)
+    });
+
+  } catch (error) {
+    console.error("Erro ao adicionar comentário:", error);
+  }
+}
 
   async deletePost(postId: string){
     const postDoc = doc(this.firestore, `posts/${postId}`);

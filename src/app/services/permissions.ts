@@ -8,14 +8,10 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 export class Permissions {
 
   async requestNotificationPermission() {
-    const permStatus = await PushNotifications.requestPermissions();
-    if (permStatus.receive === 'granted') {
-      await PushNotifications.register();
-      console.log('Notificações permitidas');
-    } else {
-      console.log('Permissão de notificações negada');
-    }
+    const result = await PushNotifications.requestPermissions();
+    return result.receive === 'granted';
   }
+
 
   async requestCameraPermission() {
     const permStatus = await Camera.requestPermissions();
