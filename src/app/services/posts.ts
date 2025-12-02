@@ -117,29 +117,44 @@ export class PostsService {
 async toggleLike(review: any) {
   try {
     const currentUser = this.auth.currentUser;
-    if (!currentUser) return;
-
-    const reviewDoc = doc(this.firestore, `posts/${review.id}`);
-
-    if (!review.liked) {
-      // ADICIONAR LIKE
-      await updateDoc(reviewDoc, {
-        likes: review.likes + 1,
-        likedBy: arrayUnion(currentUser.uid)
-      });
-    } else {
-      // REMOVER LIKE
-      await updateDoc(reviewDoc, {
-        likes: Math.max(0, review.likes - 1),
-        likedBy: arrayRemove(currentUser.uid)
-      });
+    if (!currentUser) {
+      console.error("Usuário não identificado");
+      return;
     }
 
+    const reviewDocRef = doc(this.firestore, `posts/${review.id}`);
+    const snap = await getDoc(reviewDocRef);
+    if (!snap.exists()) {
+      console.error("Documento do post não encontrado");
+      return;
+    }
+
+    const data: any = snap.data();
+    const likedBy: string[] = data.likedBy || [];
+    const hasLiked = likedBy.includes(currentUser.uid);
+
+    if (!hasLiked) {
+      await updateDoc(reviewDocRef, {
+        likedBy: arrayUnion(currentUser.uid),
+        likes: (data.likes || 0) + 1
+      });
+
+      return { liked: true, likes: (data.likes || 0) + 1 };
+    } else {
+      // Remover like
+      await updateDoc(reviewDocRef, {
+        likedBy: arrayRemove(currentUser.uid),
+        likes: Math.max(0, (data.likes || 1) - 1)
+      });
+
+      return { liked: false, likes: Math.max(0, (data.likes || 1) - 1) };
+    }
   } catch (error) {
     console.error("Erro ao atualizar like:", error);
-    review.liked = !review.liked; // desfaz mudança local
+    throw error;
   }
 }
+
 
 
 async addComment(reviewId: any, commentText: any) {

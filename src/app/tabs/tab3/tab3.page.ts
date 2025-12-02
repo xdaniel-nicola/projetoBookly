@@ -47,12 +47,18 @@ loadPosts() {
     });
   }
 
-  toggleLike(review: any) {
-    review.liked = !review.liked;
-    this.postsService.toggleLike(review).then(() => {
-      this.loadPosts();
+toggleLike(review: any) {
+  this.postsService.toggleLike(review)
+    .then((res: any) => {
+      if (!res) return;
+      review.liked = res.liked;
+      review.likes = res.likes;
+    })
+    .catch(err => {
+      console.error("Erro no toggleLike:", err);
     });
-  }
+}
+
 
   openCommentPanel(review: any) {
     this.activeReview = {...review,newComment: ''};

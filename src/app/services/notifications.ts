@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
+import { Auth, user } from '@angular/fire/auth';
 import { Firestore
   ,collection
   ,addDoc
@@ -12,7 +12,8 @@ import { Firestore
   ,getDocs
  } from '@angular/fire/firestore';
 //  import { getDocs } from 'firebase/firestore';
- import { Observable } from 'rxjs';
+ import { Observable, of, from} from 'rxjs';
+ import { switchMap, map } from 'rxjs/operators';
 
 
  export interface Notification {
@@ -100,13 +101,9 @@ export class Notifications {
   }
 
   getUserNotifications(): Observable<Notification[]> {
-    return new Observable(observer => {
-      const currentUser = this.auth.currentUser;
-      if (!currentUser) {
-        observer.next([]);
-        observer.complete();
-        return;
-      }
+  return user(this.auth).pipe(
+    switchMap(currentUser => {
+      if (!currentUser) return of([]);
 
       const notificationsRef = collection(this.firestore, 'notifications');
       const q = query(
@@ -115,21 +112,18 @@ export class Notifications {
         orderBy('createdAt', 'desc')
       );
 
-        getDocs(q)
-        .then((snapshot) => {
-          const notifications = snapshot.docs.map(doc => ({
+      return from(getDocs(q)).pipe(
+        map(snapshot =>
+          snapshot.docs.map(doc => ({
             id: doc.id,
-            ...doc.data()
-          })) as Notification[];
-          
-          observer.next(notifications);
-          observer.complete();
-        })
-          .catch((error) => {
-              observer.error(error)
-          });
-      });
-    }
+            ...doc.data(),
+          })) as Notification[]
+        )
+      );
+    })
+  );
+}
+
 
     async markAsRead(notificationId: string) {
       const notificationDoc = doc(this.firestore, `notifications/${notificationId}`);
