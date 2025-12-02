@@ -60,7 +60,7 @@ export class EditpostPage implements OnInit {
   reviewComment: string = '';
   rating: number = 0;
 
-  statusOptions = ['Lidos', 'Estou lendo', 'Quero ler', 'Relendo', 'Abandonados'];
+  statusOptions = ['Lido', 'Estou lendo', 'Quero ler', 'Relendo', 'Abandonados'];
 
   constructor(private router: Router, private postsService: PostsService) {}
 

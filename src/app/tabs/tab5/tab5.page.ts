@@ -95,7 +95,8 @@ export class Tab5Page implements OnInit {
           icon: 'trash',
           handler: async () => {
             await this.postsService.deletePost(post.id);
-            this.booksByStatus[post.book.category] = this.booksByStatus[post.book.category].filter(
+            const status = post.book.status;
+            this.booksByStatus[status] = this.booksByStatus[status].filter(
               b => b.id !== post.id
             );
           }  
