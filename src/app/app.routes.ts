@@ -48,6 +48,11 @@ export const routes: Routes = [
   {
     path: 'editprofile',
     loadComponent: () => import('./pages/editprofile/editprofile.page').then( m => m.EditProfilePage)
+  },
+  {
+    path: 'post-books/:id',
+    loadComponent: () => import('./pages/post-books/post-books.page').then( m => m.PostBooksPage)
   }
+
 
 ];
