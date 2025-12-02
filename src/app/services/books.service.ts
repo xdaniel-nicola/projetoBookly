@@ -40,6 +40,14 @@ export class BooksService {
 
   mapVolumeToModel(vol: any) {
     const vi = vol.volumeInfo || {};
+    let thumbnail =
+    vi.imageLinks?.thumbnail ||
+    vi.imageLinks?.smallThumbnail ||
+    null;
+
+    if (thumbnail && thumbnail.startsWith('http://')) {
+      thumbnail = thumbnail.replace('http://', 'https://');
+    }
 
     return {
       id: vol.id,
@@ -56,10 +64,7 @@ export class BooksService {
       categories: vi.categories || [],
       averageRating: vi.averageRating || null,
       ratingsCount: vi.ratingsCount || null,
-      thumbnail:
-        vi.imageLinks?.thumbnail ||
-        vi.imageLinks?.smallThumbnail ||
-        null,
+      thumbnail: thumbnail,
       previewLink: vi.previewLink || null,
       infoLink: vi.infoLink || null
     };
