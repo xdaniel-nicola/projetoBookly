@@ -96,7 +96,15 @@
           <div class="info-value synopsis">{{ synopsis }}</div>
           
           <p class="info-label">Onde encontrar</p>
-          <div class="info-value where-to-find">{{ whereToFind }}</div>
+          @if (whereToFind !== 'Link não encontrado' && whereToFind !== 'Link não disponível') {
+          <a [href]="whereToFind" class="info-value where-to-find" target="_blank">
+            Comprar este livro
+          </a>
+          } @else {
+            <span class="info-value where-to-find">
+              {{ whereToFind }}
+            </span>
+          }
         </div>
 
         <!-- Data de Início -->

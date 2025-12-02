@@ -43,7 +43,41 @@ export class PostBooksPage {
     private postsService: PostsService,
     private toastCtrl: ToastController) {this.loadBookFromNavigation();}
 
-  loadBookFromNavigation() {
+  async fetchGoogleBooksLink(title: string, author: string): Promise<string> {
+    const query = encodeURIComponent(`${title} ${author}`);
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&country=BR`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.items && data.items.length > 0) {
+      return data.items[0].saleInfo?.buyLink || 'Link não disponível';
+    }
+    return 'Link não encontrado';
+  }
+
+  async fetchMercadoLivreLink(title: string, author: string): Promise<string> {
+    const query = encodeURIComponent(`${title} ${author}`);
+    const url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.results && data.results.length > 0) {
+      return data.results[0].permaLink;
+    }
+    return 'Link não encontrado';
+  }
+
+  async fetchPurchaseLink(title: string, author: string): Promise<string> {
+    let link = await this.fetchGoogleBooksLink(title, author);
+    if (!link  || link === 'Link não disponível') {
+      link = await this.fetchMercadoLivreLink(title, author);
+    }
+    return link;
+  }
+
+  async loadBookFromNavigation() {
     const nav = this.router.currentNavigation();
     const state = nav?.extras?.state as any;
 
@@ -55,7 +89,7 @@ export class PostBooksPage {
       this.bookCover = book.volumeInfo.imageLinks?.thumbnail || 'assets/capas/default-book.png';
       this.releaseDate = book.volumeInfo.publishedDate || 'Data Desconhecida';
       this.synopsis = book.volumeInfo.description || 'Sinopse não disponível.';
-      this.whereToFind = book.volumeInfo.publisher || 'Local de publicação desconhecido.';
+      this.whereToFind = await this.fetchPurchaseLink(this.bookTitle, this.bookAuthor);
     }
   }
 
@@ -91,7 +125,7 @@ export class PostBooksPage {
       cover: this.bookCover,
       releaseDate: this.releaseDate,
       synopsis: this.synopsis,
-      whereToFind: "link de afiliado",
+      whereToFind: this.whereToFind,
       status: this.bookStatus,
       rating: this.rating,
       startDate: this.startDate,
