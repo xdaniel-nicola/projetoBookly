@@ -31,7 +31,7 @@
         <ion-item>
 
           @if (book.volumeInfo.imageLinks?.thumbnail) {
-            <div class="cover-card" slot="start">
+            <div class="cover-card" slot="start" (click)="openBook(book)">
               <img [src]="getBestImage(book)">
             </div>
           }

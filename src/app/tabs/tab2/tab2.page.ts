@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent
   ,IonItem
   ,IonSearchbar
@@ -125,7 +126,13 @@ export class Tab2Page {
 
  searchResults: any[] = [];
  
-   constructor(private booksService: BooksService) {}
+   constructor(private booksService: BooksService, private router: Router) {}
+
+   openBook(book:any) {
+      this.router.navigate(['/post-books', book.id], {
+      state: { book }
+    })
+   }
  
    async search(query: string | null | undefined) {
      if (!query || query.trim() === '') {
