@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Auth, user } from '@angular/fire/auth';
 import { firstValueFrom } from 'rxjs';
 
@@ -23,5 +23,9 @@ export class UserService {
     if (!snap.exists()) return null;
 
     return snap.data();
+  }
+  
+  updateUser(uid: string, data: any) {
+    return updateDoc(doc(this.firestore, 'users', uid), data)
   }
 }

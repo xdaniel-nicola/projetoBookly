@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms'; 
 import { 
@@ -10,8 +10,14 @@ import {
   IonItem, 
   IonLabel, 
   IonText, 
-  IonThumbnail 
+  IonThumbnail,
+  IonBadge,
+  IonButton,
+  IonIcon
 } from '@ionic/angular/standalone';
+import { Notifications, Notification } from '../../services/notifications'
+import { Router } from '@angular/router';
+import { notifications, timeSharp } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tab4',
@@ -29,46 +35,101 @@ import {
     IonItem, 
     IonLabel, 
     IonText, 
-    IonThumbnail
+    IonThumbnail,
+    IonBadge,
+    IonButton,
+    IonIcon
   ]
 })
 export class Tab4Page implements OnInit {
 
   // Definição da propriedade notifications
-  notifications: any[] = [];
+  notifications: Notification[] = [];
+  unreadCount: number = 0;
+  loading: boolean = true;
 
-
-  constructor() { 
-    // O construtor está vazio, o que é comum.
-  }
+  notificationsService = inject(Notifications);
+  router = inject(Router);
 
   ngOnInit() {
-    // Conteúdo da lógica de inicialização (dados mockados)
-    const posts = [
-      {
-        id: 2,
-        user: 'Daniel',
-        book: {
-          title: 'A Hipótese do Amor',
-          // Certifique-se de que o caminho 'assets/capas/hipotese.jpg' existe!
-          image: 'assets/capas/hipotese.jpg' 
-        },
-        comment: 'Primeiro livro que vejo escrito em terceira pessoa. Muito diferente!',
-        likes: 15,
-        comments: [
-          { user: 'Douglas', text: 'Sério?' },
-          { user: 'João', text: 'Também reparei nisso!' }
-        ]
+    this.loadNotifications();
+  }
+
+  ionViewWillEnter(){
+    this.loadNotifications();
+  }
+
+  loadNotifications() {
+    this.loading = true;
+
+    this.notificationsService.getUserNotifications().subscribe({
+      next: (notifications) => {
+        console.log("Notificações recebidas: ", notifications);
+        this.notifications = notifications;
+        this.updateUnreadCount();
+        this.loading = false;
       },
-      // Adicione mais posts aqui se quiser testar a rolagem
-    ];
-    
-    // Mapeia os posts para o formato de notificações
-    this.notifications = posts.map(post => ({
-      bookTitle: post.book.title,
-      bookImage: post.book.image,
-      likes: post.likes,
-      comments: post.comments.length
-    }));
+      error: (err) => {
+        console.error("Erro ao carregar notificações: ", err);
+        this.loading = false;
+      }
+    });
+  }
+  async updateUnreadCount() {
+    this.unreadCount = await this.notificationsService.getUnreadCount();
+  }
+
+  async MarkAsRead(notification: Notification) {
+    if (notification.id && !notification.read) {
+      await this.notificationsService.markAsRead(notification.id);
+      notification.read = true;
+      this.updateUnreadCount();
+    }
+  }
+
+  async markAllAsRead() {
+    await this.notificationsService.markAllAsRead();
+    this.loadNotifications();
+  }
+
+  goToPost(notification: Notification) {
+    this.MarkAsRead(notification);
+    this.router.navigate(['/tabs/tab3']);
+  }
+
+  getNotificationMessage(notification: Notification): string {
+    if (notification.type === 'like') {
+      return `${notification.triggeredByUsername} curtiu sua avaliação de "${notification.bookTitle}"`;
+    } else if (notification.type === 'comment') {
+      return `${notification.triggeredByUsername} comentou: "${notification.commentText}"`;
+    }
+    return '';
+  }
+
+  getNotificationIcon(notification: Notification): string {
+    return notification.type === 'like' ? 'heart' : 'chatbox';
+  }
+
+  getNotificationColor(notification: Notification): string {
+    return notification.type === 'like' ? 'danger' : 'primary';
+  }
+
+  formatDate(timestamp: any): string {
+    if (!timestamp) return '';
+
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return 'Agora';
+    if (minutes < 60) return `${minutes}m atrás`;
+    if (hours < 24) return `${hours}h atrás`;
+    if (days < 7) return `${days} dias atrás`;
+
+    return date.toLocaleDateString('pt-BR')
   }
 } 

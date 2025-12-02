@@ -10,3 +10,23 @@
   height: auto;   /* mantém proporção */
   border-radius: 8px; /* opcional, deixa arredondado */
 }
+
+.covers-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+
+.cover-card {
+  margin: 10px;
+  aspect-ratio: 2/3; // formato de capa
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cover-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

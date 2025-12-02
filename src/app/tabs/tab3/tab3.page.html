@@ -16,17 +16,27 @@
   <div class="feed">
     @for (review of reviews; track review.id) {
       <div class="review-card">
+        <div class="review-user-data">
+          <h3 class="review-owner">Avaliação de <strong>{{ review.user }}</strong></h3>
+          <p class="review-status">Status: {{ review.book.status }}</p>
+          <h5 class="review-title">{{ review.titleReview }}</h5>
+          <p class="review-text">{{ review.comment }}</p>
+        </div>
         <div class="review-header">
           <img [src]="review.book.image" alt=" {{ review.book.title }}"/>
           <div class="review-info">
-            <h3>{{ review.user }}</h3>
-            <p class="book-title">{{ review.book.title }}</p>
+            <h3>{{ review.book.title }}</h3>
+            <p class="book-title">{{ review.book.author }}</p>
           </div>
         </div>
-      </div>
-
-      <p class="review-text">{{ review.comment }}</p>
-
+          <p class="review-date">{{ review.book.startDate | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p class="review-date">{{review.book.rating}} <ion-icon name="star"></ion-icon></p>
+        </div>
+        <!-- <div class="review-user-data">
+          <h3 class="review-owner">Avaliação de <strong>{{ review.user }}</strong></h3>
+          <h5 class="review-title">{{ review.titleReview }}</h5>
+          <p class="review-text">{{ review.comment }}</p>
+        </div> -->
       <div class="review-footer">
         <span (click)="toggleLike(review)">
           <ion-icon [name]="review.liked ? 'heart' : 'heart-outline'"></ion-icon>
@@ -34,26 +44,8 @@
         </span>
         <span (click)="openCommentPanel(review)"> 
           <ion-icon name="chatbox-outline"></ion-icon>
-          {{ review.comments.length }} comentários
+          {{ review.comments?.length || 0 }} comentários
         </span>
-
-        <!-- @if (review.showCommentBox) {
-          <div class="comment-box">
-            <ion-textarea [(ngModel)]="review.newComment" placeholder="Escreva um comentário..."></ion-textarea>
-            <ion-button size="small" (click)="addComment(review)">Enviar</ion-button>
-          </div>
-        }
-
-        @if (review.comments.length > 0) {
-          <div class="comment-list">
-            @for (comment of review.comments; track comment) {
-              <div class="comment-item">
-                <ion-icon name="chatbubble-outline"></ion-icon>
-                <span>{{ comment }}</span>
-              </div>
-            }
-          </div>
-        } -->
       </div>
     }
   </div>
@@ -61,7 +53,7 @@
   @if (activeReview) {
     <div class="comment-panel">
       <div class="panel-header">
-        <h3> Comentários de {{ activeReview.user }}</h3>
+        <h3> Comentários</h3>
         <ion-button fill="clear" size="small" (click)="closeCommentPanel()">Fechar</ion-button>
       </div>
 
@@ -86,30 +78,5 @@
       </div>
     </div>
   }
-
-  <!-- <div class="feed">
-    @for (review of reviews; track review.id) {
-      <div class="review-card">
-        <div class="review-header">
-          <img [src]="review.book.image" alt=" {{review.book.title}}"/>
-          <div class="review-info">
-            <h3>{{ review.user }}</h3>
-            <p class="book-title">{{ review.book.title }}</p>
-          </div>
-        </div>
-        <p class="review-text">{{ review.comment }}</p>
-        <div class="review-footer">
-          <span> 
-            <ion-icon name="heart-outline"></ion-icon>
-            {{ review.likes }} curtidas
-          </span>
-          <span> 
-            <ion-icon name="chatbox-outline"></ion-icon>
-            {{ review.comments.length }} comentários
-          </span>
-        </div>
-      </div>
-    }
-  </div> -->
 
 </ion-content>

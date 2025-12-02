@@ -14,158 +14,119 @@
   </ion-header>
 
   <!-- barra de pesquisa -->
-    <div class="search-container">
-      <ion-searchbar 
-        placeholder="Buscar livros, autores..." 
-        debounce="300" 
-        (ionInput)="onSearchInput($event)" 
-        class="custom-searchbar">
-      </ion-searchbar>
-    </div>
+  <div class="search-container">
+    <ion-searchbar 
+      placeholder="Buscar livros, autores..."
+      debounce="300"
+      (ionInput)="search($event.detail.value)"
+      class="custom-searchbar">
+    </ion-searchbar>
+  </div>
 
-  <!-- menu de categorias -->
-   <div class="category-menu">
-      <ion-segment scrollable="true" value="favoritos" class="category-segment">
-        <ion-segment-button value="favoritos">
-          <ion-icon name="heart-outline"></ion-icon>
-          <ion-label>Favoritos</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="historico">
-          <ion-icon name="time"></ion-icon>
-          <ion-label>Histórico</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="seguindo">
-          <ion-icon name="person"></ion-icon>
-          <ion-label>Seguindo</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="explorar">
-          <ion-icon name="compass"></ion-icon>
-          <ion-label>Explorar</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-   </div>
+@if (searchResults.length > 0) {
+  <div class="search-results">
 
+    <ion-list>
 
-  <!-- seçao de autores -->
- @for (author of authors; track author.name) {
-  <div class="author-card">
-    <div class="author-info">
-      <h2>{{ author.name }}</h2>
-    </div>
-    <div class="author-carousel">
-      @for (book of author.books; track book.title) {
-        <div class="author-book-card">
-          <img [src]="book.image" [alt]="book.title" />
-        </div>
+      @for (book of searchResults; track book.id ?? book.volumeInfo.title ?? $index) {
+        <ion-item>
+
+          @if (book.volumeInfo.imageLinks?.thumbnail) {
+            <ion-thumbnail slot="start">
+              <img [src]="book.volumeInfo.imageLinks.thumbnail">
+            </ion-thumbnail>
+          }
+
+          <ion-label>
+            <h2>{{ book.volumeInfo.title }}</h2>
+            <p>{{ book.volumeInfo.authors?.join(', ') }}</p>
+          </ion-label>
+
+        </ion-item>
       }
-    </div>
+
+    </ion-list>
+
   </div>
 }
-  
-   <!-- seçao de destaques -->
-    <!-- <div class="featured-section">
-      <div class="featured-scroll">
-        <div 
-          class="featured-book-card"
-          *ngFor="let book of favoriteBooks"
-          (click)="onBookClick(book)">
-          <div class="book-cover">
-            <img [src]="book.image" [alt]="book.title" />
-            <div class="book-overlay">
-              <h3>{{ book.title }}</h3>
-              <p>{{ book.author }}</p>
-            </div>
-          </div>
-        </div>
+
+  <!-- TERROR -->
+  <div class="book-section">
+    <div class="section-header">
+      <h2>Terror</h2>
+      <ion-icon name="chevron-forward"></ion-icon>
+    </div>
+
+    <div class="book-scroll">
+      <div class="book-card" *ngFor="let book of terrorBooks" (click)="openBook(book)">
+        <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+        <h4>{{ book.volumeInfo?.title }}</h4>
+        <p>{{ book.volumeInfo?.authors?.[0] }}</p>
       </div>
-    </div> -->
+    </div>
+  </div>
 
+  <!-- AVENTURA -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Aventura</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
+  </div>
 
-    <!-- seçao de categorias -->
-     <!-- terror -->
-      <div class="book-section">
-        <div class="section-header" (click)="onSectionClick('terror')">
-          <h2>Terror</h2>
-          <ion-icon name="chevron-forward"></ion-icon>
-        </div>
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of aventuraBooks" (click)="openBook(book)">
+      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+      <h4>{{ book.volumeInfo?.title }}</h4>
+      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
 
-        <div class="book-scroll">
-          <div 
-            class="book-card"
-            *ngFor="let book of terrorBooks"
-            (click)="onBookClick(book)">
-            <div class="book-image">
-              <img [src]="book.image" [alt]="book.title" />
-            </div>
-            <div class="book-info">
-              <h4>{{ book.title }}</h4>
-              <p>{{ book.author }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- ROMANCE -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Romance</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
+  </div>
 
-      <!-- açao e aventura -->
-      <div class="book-section">
-        <div class="section-header" (click)="onSectionClick('acao-aventura')">
-          <h2>Ação e Aventura</h2>
-          <ion-icon name="chevron-forward"></ion-icon>
-        </div>
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of romanceBooks" (click)="openBook(book)">
+      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+      <h4>{{ book.volumeInfo?.title }}</h4>
+      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
 
-        <div class="book-scroll">
-          <div 
-            class="book-card"
-            *ngFor="let book of adventureBooks"
-            (click)="onBookClick(book)">
-            <div class="book-image">
-              <img [src]="book.image" [alt]="book.title" />
-            </div>
-            <div class="book-info">
-              <h4>{{ book.title }}</h4>
-              <p>{{ book.author }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- FANTASIA -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Fantasia</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
+  </div>
 
-      <!-- romance -->
-      <div class="book-section">
-        <div class="section-header" (click)="onSectionClick('romance')">
-          <h2>Romance</h2>
-          <ion-icon name="chevron-forward"></ion-icon>
-        </div>
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of fantasiaBooks" (click)="openBook(book)">
+      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+      <h4>{{ book.volumeInfo?.title }}</h4>
+      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
 
-        <div class="book-scroll">
-          <div 
-            class="book-card"
-            *ngFor="let book of romanceBooks"
-            (click)="onBookClick(book)">
-            <div class="book-image">
-              <img [src]="book.image" [alt]="book.title" />
-            </div>
-            <div class="book-info">
-              <h4>{{ book.title }}</h4>
-              <p>{{ book.author }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-  
-  
-  <!-- <ion-item> 
-      <ion-searchbar show-clear-button="always" placeholder="Procure por livros, autores..."></ion-searchbar>
-    </ion-item>
+<!-- FICÇÃO -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Ficção</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
+  </div>
 
-
-
-
-    
-    <ion-label class="ion-text-wrap">
-      <h3>Terror</h3>
-      <ion-button color="medium" shape="round">
-        <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
-      </ion-button>
-    </ion-label>
-  <app-explore-container name="Tab 1 page"></app-explore-container> -->
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of ficcaoBooks" (click)="openBook(book)">
+      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
+      <h4>{{ book.volumeInfo?.title }}</h4>
+      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
 </ion-content>

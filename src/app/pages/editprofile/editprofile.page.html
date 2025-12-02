@@ -1,13 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Editar perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true" class="edit-profile-content">
   <div class="profile-container">
     <!-- Header com foto de perfil -->
     <div class="profile-header">
       <div class="profile-image-wrapper">
         <div class="profile-image">
-          <img src="../../../assets/perfis/foto.png" alt="Profile" />
+          <img [src]="avatarPreview" class="profile-photo" alt="Profile" />
         </div>
-        <button class="add-photo-btn" (click)="onChangeProfilePicture()">
+        <button class="add-photo-btn" (click)="generateNewAvatar()">
           <ion-icon name="add-circle"></ion-icon>
+        </button>
+        <button class="save-photo-btn" (click)="saveAvatar()">
+          <ion-icon name="save-outline"></ion-icon>
         </button>
       </div>
     </div>
