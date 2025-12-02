@@ -12,8 +12,14 @@ import {
   IonCol, 
   IonRow, 
   IonGrid,
-  IonSkeletonText
+  IonSkeletonText,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherCustomEvent,
+  IonIcon
 } from '@ionic/angular/standalone';
+import { ActionSheetController } from '@ionic/angular';
+import { PostsService } from 'src/app/services/posts';
 // Removido o import 'count' não utilizado
 
 type Book = {
@@ -21,6 +27,8 @@ type Book = {
   image: string;
   category: string;
 };
+
+
 
 @Component({
   selector: 'app-tab5',
@@ -38,33 +46,84 @@ type Book = {
     IonCol, 
     IonRow, 
     IonGrid,
-    IonSkeletonText
+    IonSkeletonText,
+    IonRefresher,
+    IonRefresherContent,
+    IonIcon
   ]
 })
+
+
 export class Tab5Page implements OnInit {
 
-  filteredBooks: Book[] = [];
-
-  filterByStatus(status: string) {
-    // Inicializa filteredBooks com todos os livros se 'Todos' for passado
-    if (status === 'Todos') {
-      this.filteredBooks = this.books;
-    } else {
-      this.filteredBooks = this.books.filter(book => book.category === status);
-    }
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
   }
   
+  booksByStatus: {[key: string]: any[]} = {};
+  statusVisibility: {[key: string]: boolean} = {};
+  
   userData: any = null;
+  books: Book[] = [];
+  filteredBooks: Book[] = [];
+  readingStatuses: {status: string, count:number}[] = [];
 
-  constructor(private userService: UserService, private ngZone: NgZone, private router: Router) { }
+  constructor(
+    private userService: UserService,
+    private postsService: PostsService,
+    private ngZone: NgZone,
+    private router: Router,
+    private actionSheetCtrl: ActionSheetController
+  ) {}
 
+  async openBookOptions(book: any) {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: book.title,
+      buttons: [
+        {
+          text: 'Editar',
+          icon: 'create',
+          handler: () => {
+            this.router.navigate(['/editpost'], { state: { book }});
+          }
+        },
+        {
+          text: 'Excluir',
+          role: 'destructive',
+          icon: 'trash',
+          handler: async () => {
+            await this.postsService.deletePost(book.id);
+            this.booksByStatus[book.category] = this.booksByStatus[book.category].filter(
+              b => b.id !== book.id
+            );
+          }  
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        }
+      ]
+    });
 
+    await actionSheet.present();
+  }
+  
   editarPerfil() {
     this.router.navigate(['/editprofile'], {
     state: { user: this.userData}
     });
   }
+
+  get statusKeys(): string[] {
+    return Object.keys(this.booksByStatus);
+  } 
+
+  evaluatedBooks: any[] = [];
+
   async ngOnInit() {
+   
     // Garante que todos os livros sejam carregados na inicialização
     // this.userData = await this.userService.getCurrentUserData();
     const data = await this.userService.getCurrentUserData();
@@ -72,7 +131,61 @@ export class Tab5Page implements OnInit {
       this.userData = data;
       console.log('Dados do usuário no Tab5Page: ', this.userData);
     });
-    this.filteredBooks = this.books; 
+
+    const posts = await this.postsService.getUserPosts(this.userData.uid);
+
+    posts.forEach((p: any) => {
+      const status = p.book.status || 'Sem status';
+      if(!this.booksByStatus[status]) {
+        this.booksByStatus[status] = [];
+        this.statusVisibility[status] = false;
+      }
+      this.booksByStatus[status].push(p.book);
+
+      if(p.book.rating || p.comment) {
+        this.evaluatedBooks.push({
+          id: p.id,
+          title: p.book.title,
+          image: p.book.image,
+          author: p.book.author,
+          rating: p.book.rating,
+          comment: p.comment
+        })
+      }
+    });
+
+    
+
+    this.books = posts.map((p: any) => ({
+      title: p.book.title,
+      image: p.book.image,
+      category: p.book.status
+    }));
+
+    const statusMap: {[key: string]: number} = {};
+    this.books.forEach(book => {
+      statusMap[book.category] = (statusMap[book.category] || 0) + 1;
+    });
+
+    this.readingStatuses = Object.keys(statusMap).map(status => ({
+      status,
+      count: statusMap[status]
+    }));
+
+    this.filteredBooks = this.books;
+  }
+
+  toggleStatus(status: string) {
+      this.statusVisibility[status] = !this.statusVisibility[status];
+  }
+
+  filterByStatus(status: string) {
+    if (status === 'Todos') {
+      this.filteredBooks = this.books;
+    } else {
+      this.filteredBooks = this.books.filter(book => 
+        book.category === status);
+    }
   }
 
   goals = [
@@ -81,15 +194,7 @@ export class Tab5Page implements OnInit {
     {type: 'Anual', value: 100, unit: 'livros'}
   ];
 
-  readingStatuses = [
-    {status: 'Lidos', count: 20},
-    {status: 'Estou lendo', count: 1},
-    {status: 'Quero ler', count: 5},
-    {status: 'Relendo', count: 1},
-    {status: 'Avaliados', count: 4},
-    {status: 'Abandonados', count: 2}
-  ];
-
+  
   // CORRIGIDO: Agora é um ARRAY [] e não um objeto {}
   libraryCategories = [ 
     {label: 'Avaliados'},
@@ -100,12 +205,6 @@ export class Tab5Page implements OnInit {
     {label: 'Estou lendo'}
   ]; 
 
-  books = [
-    {title: 'A Hipótese do Amor', image: 'assets/capas/hipotese.jpg', category: 'Lidos'},
-    {title: 'Não Pisque', image: 'assets/capas/nao-pisque.jpg', category: 'Estou lendo'},
-    {title: 'Instinto assassino', image: 'assets/capas/instinto-assassino.jpg', category: 'Quero ler'},
-  ];
-
   editGoal(goal: any) {
     console.log('Editar meta: ', goal);
   }
@@ -114,3 +213,4 @@ export class Tab5Page implements OnInit {
     console.log('Abrir categoria: ', label)
   }
 }
+
