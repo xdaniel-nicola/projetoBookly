@@ -1,0 +1,172 @@
+import { inject, Injectable } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
+import { Firestore, 
+  Timestamp, 
+  collection, 
+  collectionData, 
+  addDoc, 
+  doc, 
+  updateDoc, 
+  arrayUnion, 
+  arrayRemove,
+  query,
+  orderBy,
+  getDocs,
+  onSnapshot,
+  getDoc} from '@angular/fire/firestore';
+import { Title } from '@angular/platform-browser';
+import { create, image } from 'ionicons/icons';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PostsService {
+  
+  userData: any = null;
+  
+  constructor(private firestore: Firestore, private auth: Auth) {}
+
+  async savePost(review: any) {
+    const currentUser = this.auth.currentUser;
+    if (!currentUser) {
+      throw new Error("Usuário não autenticado");
+    }
+
+    const userDoc = await getDoc(doc(this.firestore,`users/${currentUser.uid}`));
+    const userData = userDoc.data();
+
+    const postsRef = collection(this.firestore, 'posts');
+
+
+    const formattedReview = {
+      userId: currentUser?.uid || "anonymous",
+      user: userData?.['username'] || currentUser.displayName || currentUser.email || "Anônimo",
+      userAvatar: userData?.['profileImage'] || currentUser?.photoURL || "../../../assets/perfis/homem.jpeg",
+      titleReview: review.titleReview,
+      comment: review.comment || "",
+      likes: 0,
+      likedBy: [],
+      comments: [],
+      createdAt: Timestamp.now(),
+
+      book: {
+        title: review.title,
+        image: review.cover,
+        author: review.author,
+        synopsis: review.synopsis,
+        releaseDate: review.releaseDate,
+        whereToFind: review.whereToFind,
+        status: review.status,
+        rating: review.rating,
+        startDate: review.startDate
+      }
+    }
+    return addDoc(postsRef, formattedReview);
+  }
+
+ getPosts(): Observable<any[]> {
+    return new Observable(observer => {
+      const postsRef = collection(this.firestore, 'posts');
+      const currentUser = this.auth.currentUser;
+      
+      // Usa getDocs para buscar uma única vez, sem tempo real
+      getDocs(postsRef)
+        .then((snapshot) => {
+          const posts = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+            id: doc.id,
+            ...doc.data(),
+            liked: data['likedBy']?.includes(currentUser?.uid) || false
+            };
+          });
+          
+          // Ordena no cliente
+          posts.sort((a: any, b: any) => {
+            const timeA = a.createdAt?.seconds || 0;
+            const timeB = b.createdAt?.seconds || 0;
+            return timeB - timeA;
+          });
+          
+          observer.next(posts);
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    });
+  }
+
+// getPosts(): Observable<any[]> {
+//     const postsRef = collection(this.firestore, 'posts');
+//     const q = query(postsRef, orderBy('createdAt', 'desc'));
+//     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+//   }
+
+
+async toggleLike(review: any) {
+    try {
+      const currentUser = this.auth.currentUser;
+      if(!currentUser) {
+        console.error("Usuário não identificado");
+        return;
+      }
+
+      console.log("Toggling like para:", review.id, "Liked:", review.liked);
+      const reviewDoc = doc(this.firestore, `posts/${review.id}`);
+      // const newLikes = review.liked ? review.likes + 1 : Math.max(0, review.likes - 1);
+      if (review.liked) {
+        await updateDoc(reviewDoc, {
+          likes: review.likes + 1,
+          likedBy: arrayUnion(currentUser.uid)
+        });
+      } else {
+        await updateDoc(reviewDoc, {
+          likes: Math.max(0, review.likes - 1),
+          likedBy: arrayRemove(currentUser.uid)
+        });
+      }
+      
+      
+      console.log("Like atualizado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar like:", error);
+      // Reverte a mudança em caso de erro
+      review.liked = !review.liked;
+    }
+  }
+
+  async addComment(reviewId: any, commentText: any) {
+    try {
+      const currentUser = this.auth.currentUser;
+      if(!currentUser) {
+        console.error("Usuário não autenticado");
+        return;
+      }
+      const userDoc = await getDoc(doc(this.firestore, `users/${currentUser.uid}`))
+      const userData = userDoc.data();
+
+
+      const comment = {
+        userId: currentUser.uid,
+        user: userData?.['username'] || currentUser.displayName || currentUser.email || "Usuário",
+        avatar: userData?.['profileImage'] || currentUser.photoURL || "../../../assets/perfis/homem.jpeg",
+        text: commentText,
+        timestamp: Timestamp.now()
+      }
+
+
+      console.log("Adicionando comentário:", reviewId, comment);
+      const reviewDoc = doc(this.firestore, `posts/${reviewId}`);
+      
+      await updateDoc(reviewDoc, {
+        comments: arrayUnion(comment)
+      });
+      
+      console.log("Comentário adicionado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao adicionar comentário:", error);
+    }
+  }
+}
