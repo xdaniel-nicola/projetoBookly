@@ -103,13 +103,10 @@ export class Notifications {
 
 getUserNotifications(): Observable<Notification[]> {
   return user(this.auth).pipe(
-    switchMap(currentUser => {
-      if (!currentUser) return of([]);
+    switchMap(async currentUser => {
+      if (!currentUser) return [];
 
-      const notificationsRef = collection(
-        this.firestore,
-        'notifications'
-      );
+      const notificationsRef = collection(this.firestore, 'notifications');
 
       const q = query(
         notificationsRef,
@@ -117,8 +114,15 @@ getUserNotifications(): Observable<Notification[]> {
         orderBy('createdAt', 'desc')
       );
 
-      return collectionData(q, { idField: 'id' }) as Observable<Notification[]>;
-    })
+      const snapshot = await getDocs(q);
+
+      return snapshot.docs.map(docSnap => ({
+        id: docSnap.id,
+        ...docSnap.data()
+      } as Notification));
+    }),
+    // como switchMap agora retorna uma Promise, convertemos para Observable
+    switchMap(result => from(Promise.resolve(result)))
   );
 }
 
