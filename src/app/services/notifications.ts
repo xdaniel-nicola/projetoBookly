@@ -10,6 +10,7 @@ import { Firestore
   ,updateDoc
   ,doc
   ,getDocs
+  ,collectionData
  } from '@angular/fire/firestore';
 //  import { getDocs } from 'firebase/firestore';
  import { Observable, of, from} from 'rxjs';
@@ -100,29 +101,27 @@ export class Notifications {
     return addDoc(notificationsRef, notification);
   }
 
-  getUserNotifications(): Observable<Notification[]> {
+getUserNotifications(): Observable<Notification[]> {
   return user(this.auth).pipe(
     switchMap(currentUser => {
       if (!currentUser) return of([]);
 
-      const notificationsRef = collection(this.firestore, 'notifications');
+      const notificationsRef = collection(
+        this.firestore,
+        'notifications'
+      );
+
       const q = query(
         notificationsRef,
         where('postOwnerId', '==', currentUser.uid),
         orderBy('createdAt', 'desc')
       );
 
-      return from(getDocs(q)).pipe(
-        map(snapshot =>
-          snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Notification[]
-        )
-      );
+      return collectionData(q, { idField: 'id' }) as Observable<Notification[]>;
     })
   );
 }
+
 
 
     async markAsRead(notificationId: string) {
