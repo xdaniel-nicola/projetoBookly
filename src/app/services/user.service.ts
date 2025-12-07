@@ -26,6 +26,7 @@ export class UserService {
   }
   
   updateUser(uid: string, data: any) {
-    return updateDoc(doc(this.firestore, 'users', uid), data)
+    const ref = doc(this.firestore, 'users', uid);
+    return updateDoc(ref, data);
   }
 }
