@@ -35,8 +35,8 @@ ngOnInit() {
   this.loadPosts();
 }
 loadPosts() {
-    this.postsService.getPosts().subscribe({
-      next: (posts) => {
+    this.postsService.getPostsRealtime().subscribe({
+      next: (posts: any[]) => {
         console.log("POSTS RECEBIDOS:", posts);
         this.reviews = posts;
         console.log("POSTS PROCESSADOS:", this.reviews);
