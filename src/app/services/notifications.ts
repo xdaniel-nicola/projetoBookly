@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Auth, user } from '@angular/fire/auth';
 import { Firestore
@@ -11,8 +12,8 @@ import { Firestore
   ,doc
   ,getDocs
   ,collectionData
+  ,onSnapshot
  } from '@angular/fire/firestore';
-//  import { getDocs } from 'firebase/firestore';
  import { Observable, of, from} from 'rxjs';
  import { switchMap, map } from 'rxjs/operators';
 
@@ -24,7 +25,7 @@ import { Firestore
   postOwnerId: string;
   triggeredBy: string;
   triggeredByUsername: string;
-  triggeredByAvatar: string;
+  triggeredByAvatar: string | null;
   bookTitle: string;
   bookImage: string;
   commentText?: string;
@@ -44,7 +45,7 @@ export class Notifications {
     bookTitle: string, 
     bookImage: string,
     triggeredByUsername: string,
-    triggeredByAvatar: string
+    triggeredByAvatar: string | null
   ) {
     const currentUser = this.auth.currentUser;
     if(!currentUser || currentUser.uid === postOwnerId) {
@@ -58,13 +59,14 @@ export class Notifications {
       postId,
       postOwnerId,
       triggeredBy: currentUser.uid,
-      triggeredByUsername,
-      triggeredByAvatar,
-      bookTitle,
-      bookImage,
+      triggeredByUsername: triggeredByUsername || 'Usuário',
+      triggeredByAvatar: triggeredByAvatar || null,
+      bookTitle: bookTitle || '',
+      bookImage: bookImage || '',
       createdAt: Timestamp.now(),
       read: false
     };
+    ;
 
     return addDoc(notificationsRef, notification)
   }
@@ -75,7 +77,7 @@ export class Notifications {
     bookTitle: string, 
     bookImage: string,
     triggeredByUsername: string,
-    triggeredByAvatar: string,
+    triggeredByAvatar: string | null,
     commentText: string
   ) {
     const currentUser = this.auth.currentUser;
@@ -86,44 +88,41 @@ export class Notifications {
     const notificationsRef = collection(this.firestore, 'notifications');
 
     const notification: Notification = {
-       type: 'comment',
+      type: 'comment',
       postId,
       postOwnerId,
       triggeredBy: currentUser.uid,
-      triggeredByUsername,
-      triggeredByAvatar,
-      bookTitle,
-      bookImage,
-      commentText,
+      triggeredByUsername: triggeredByUsername || 'Usuário',
+      triggeredByAvatar: triggeredByAvatar || null,
+      bookTitle: bookTitle || '',
+      bookImage: bookImage || '',
+      commentText: commentText || '',
       createdAt: Timestamp.now(),
       read: false
     };
+
     return addDoc(notificationsRef, notification);
   }
 
 getUserNotifications(): Observable<Notification[]> {
-  return user(this.auth).pipe(
-    switchMap(async currentUser => {
-      if (!currentUser) return [];
-
-      const notificationsRef = collection(this.firestore, 'notifications');
-
-      const q = query(
-        notificationsRef,
-        where('postOwnerId', '==', currentUser.uid),
-        orderBy('createdAt', 'desc')
-      );
-
-      const snapshot = await getDocs(q);
-
-      return snapshot.docs.map(docSnap => ({
-        id: docSnap.id,
-        ...docSnap.data()
-      } as Notification));
-    }),
-    // como switchMap agora retorna uma Promise, convertemos para Observable
-    switchMap(result => from(Promise.resolve(result)))
+  const notificationsRef = collection(this.firestore, 'notifications');
+  const q = query(
+    notificationsRef,
+    where('postOwnerId', '==', this.auth.currentUser?.uid),
+    orderBy('createdAt', 'desc')
   );
+
+  return new Observable(subscriber => {
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const notifications = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Notification[];
+
+      subscriber.next(notifications)
+    });
+    return () => unsubscribe();
+  })
 }
 
 
