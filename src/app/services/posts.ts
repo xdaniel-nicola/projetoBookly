@@ -14,8 +14,15 @@ import {
   deleteDoc
 } from '@angular/fire/firestore';
 
-import { getDatabase, ref, set, Database, update, onValue } from '@angular/fire/database';
-import { Observable } from 'rxjs';
+import { getDatabase, 
+  ref, 
+  set, 
+  Database, 
+  update, 
+  onValue,
+  push  } from '@angular/fire/database';
+import { Observable, timestamp } from 'rxjs';
+import { Notifications } from './notifications';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +31,10 @@ export class PostsService {
 
   constructor(
     private firestore: Firestore,
-    private auth: Auth
+    private auth: Auth,
+ 
   ) {}
-
+  private notificationsService = inject(Notifications)
   private db = inject(Database);
 
 async savePost(review: any) {
@@ -77,31 +85,50 @@ async savePost(review: any) {
   console.log("ENVIANDO PARA RTDB: ", postId, review)
 
   await set(postRef, {
-    ...review,
+    id: postId,
+    userId: review.userId,
+    user: review.user,
+    userAvatar: review.userAvatar,
+    titleReview: review.titleReview,
+    comment: review.comment,
     createdAt: Date.now(),
-    likes: 0,
-    comments: []
+    likes: review.likes,
+    likedBy: review.likedBy,
+    comments: Array.isArray(review.comments) ? review.comments : [],
+    book: review.book
   });
 }
 
 getPostsRealtime(): Observable<any[]> {
+  const currentUser = this.auth.currentUser;
+
   return new Observable((observer) => {
     const feedRef = ref(this.db, 'posts');
 
     onValue(feedRef, (snapshot) => {
       const data = snapshot.val() || {};
 
-      const posts = Object.entries(data).map(([id, post]: any) => ({
-        id,
-        ...post
-      }));
+      const posts = Object.entries(data).map(([id, post]: any) => {
+        const likedBy = post.likedBy || [];
+
+        return {
+          id,
+          ...post,
+          comments: post.comments
+            ? Object.values(post.comments)
+            : [],
+
+          liked: currentUser ? likedBy.includes(currentUser.uid) : false
+        };
+      });
 
       posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-      observer.next(posts)
-    })
-  })
+      observer.next(posts);
+    });
+  });
 }
+
 
 
   async getUserPosts(userId: string) {
@@ -112,70 +139,117 @@ getPostsRealtime(): Observable<any[]> {
   }
 
   async toggleLike(review: any) {
-    try {
-      const currentUser = this.auth.currentUser;
-      if (!currentUser) return;
+    const currentUser = this.auth.currentUser;
+    if(!currentUser) return;
 
-      const reviewDocRef = doc(this.firestore, `posts/${review.id}`);
-      const snap = await getDoc(reviewDocRef);
+    const currentUserDoc = await getDoc(doc(this.firestore, `users/${currentUser.uid}`));
+    const currentUserData = currentUserDoc.data();
 
-      if (!snap.exists()) return;
+    const triggeredUsername =
+    currentUserData?.['username'] ||
+    currentUser.displayName || 
+    currentUser.email ||
+    "Usuário";
 
-      const data: any = snap.data();
-      const likedBy: string[] = data.likedBy || [];
-      const hasLiked = likedBy.includes(currentUser.uid);
+    const triggeredAvatar =
+    currentUserData?.['profileImage'] ||
+    currentUser.photoURL ||
+    "../../../assets/perfis/homem.jpeg"
 
-      const newLikes = hasLiked ? Math.max(0, data.likes - 1) : (data.likes + 1);
+    const reviewDocRef = doc(this.firestore, `posts/${review.id}`);
+    const snap = await getDoc(reviewDocRef);
 
-      await updateDoc(reviewDocRef, {
-        likes: newLikes,
-        likedBy: hasLiked
-          ? likedBy.filter(uid => uid !== currentUser.uid)
-          : [...likedBy, currentUser.uid]
-      });
+    if(!snap.exists()) return;
 
-      return {
-        liked: !hasLiked,
-        likes: newLikes
-      };
-    } catch (error) {
-      console.error("Erro ao atualizar like:", error);
-      throw error;
-    }
+    const data: any = snap.data();
+    const likedBy: string[] = data.likedBy || [];
+    const hasLiked = likedBy.includes(currentUser.uid);
+
+    const newLikes = hasLiked ? Math.max(0, data.likes - 1) : data.likes + 1;
+
+    await updateDoc(reviewDocRef, {
+      likes: newLikes,
+      likedBy: hasLiked
+      ? likedBy.filter(uid => uid !== currentUser.uid)
+      : [...likedBy, currentUser.uid]
+    });
+
+    const likeRef = ref(this.db, `posts/${review.id}`);
+
+    await update(likeRef, {
+      likes: newLikes,
+      likedBy: hasLiked
+      ? likedBy.filter(uid => uid !== currentUser.uid)
+      : [...likedBy, currentUser.uid]
+    })
+    if (!hasLiked) {
+    await this.notificationsService.createLikeNotification(
+      review.id,
+      review.userId, // dono do post
+      review.book?.title,
+      review.book?.image,
+      triggeredUsername,
+      triggeredAvatar
+    );
+  }
+  return {
+    liked: !hasLiked,
+    likes: newLikes
+  }
+    
   }
 
-  async addComment(reviewId: any, commentText: any) {
-    try {
-      const currentUser = this.auth.currentUser;
-      if (!currentUser) return;
+  async addComment(postId: string, commentText: string) {
+    const currentUser = this.auth.currentUser;
+    if (!currentUser) return;
 
-      const userDoc = await getDoc(doc(this.firestore, `users/${currentUser.uid}`));
-      const userData = userDoc.data();
+    const userDoc = await getDoc(doc(this.firestore, `users/${currentUser.uid}`));
+    const userData = userDoc.data();
 
-      const comment = {
-        userId: currentUser.uid,
-        user: userData?.['username'] || currentUser.displayName || currentUser.email,
-        avatar: userData?.['profileImage'] || currentUser.photoURL,
-        text: commentText,
-        timestamp: Timestamp.now()
-      };
+    const comment = {
+      userId: currentUser.uid,
+      user: userData?.['username'] || currentUser.displayName || currentUser.email,
+      avatar: userData?.['profileImage'] || currentUser.photoURL,
+      text: commentText,
+      timestamp: Timestamp.now()
+    };
 
-      const reviewDoc = doc(this.firestore, `posts/${reviewId}`);
-      await updateDoc(reviewDoc, {
-        comments: [...( (await getDoc(reviewDoc)).data()?.['comments'] || [] ), comment]
-      });
+    const postRef = doc(this.firestore, `posts/${postId}`);
+    const snap = await getDoc(postRef);
 
-    } catch (error) {
-      console.error("Erro ao adicionar comentário:", error);
-    }
+    const postData: any = snap.data();
+    const updatedComments = [...(postData.comments || []), comment];
+
+    await updateDoc(postRef, {
+      comments: updatedComments
+    });
+    
+    const commentRef = ref(this.db, `posts/${postId}/comments`);
+
+    await push(commentRef, comment);
+
+    await this.notificationsService.createCommentNotification(
+    postId,
+    postData.userId,
+    postData.book?.title,
+    postData.book?.image,
+    comment.user,
+    comment.avatar,
+    commentText
+  );
+
+    return comment;
+
   }
 
   async deletePost(postId: string) {
     await deleteDoc(doc(this.firestore, `posts/${postId}`));
+    await set(ref(this.db, `posts/${postId}`), null);
   }
 
   async updatePost(postId: string, updatedData: any) {
     await updateDoc(doc(this.firestore, `posts/${postId}`), updatedData);
+    await update(ref(this.db, `posts/${postId}`), updatedData)
   }
 
   getPosts() {

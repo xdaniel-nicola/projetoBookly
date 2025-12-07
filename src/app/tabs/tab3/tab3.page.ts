@@ -28,7 +28,6 @@ export class Tab3Page implements OnInit {
 reviews: any[] = [];
 activeReview: any = null;
 
-
   postsService = inject(PostsService)
 
 ngOnInit() {
@@ -61,7 +60,10 @@ toggleLike(review: any) {
 
 
   openCommentPanel(review: any) {
-    this.activeReview = {...review,newComment: ''};
+    this.activeReview = {
+      ...review,
+      comments: review.comments || [],
+      newComment: ''};
   }
 
   closeCommentPanel() {
