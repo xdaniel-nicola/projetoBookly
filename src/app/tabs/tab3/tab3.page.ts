@@ -10,6 +10,7 @@ import { ExploreContainerComponent } from '../../explore-container/explore-conta
 import { PostsService } from '../../services/posts';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { Capacitor } from '@capacitor/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -30,10 +31,32 @@ reviews: any[] = [];
 activeReview: any = null;
 
   firestore = inject(Firestore);
-  postsService = inject(PostsService)
+  postsService = inject(PostsService);
+  activeRoute = inject(ActivatedRoute);
 
 ngOnInit() {
   this.loadPosts();
+}
+
+async scrollToPost(postId: string) {
+  const element = document.getElementById(`post-${postId}`);
+
+  if(!element) {
+    console.warn("Post não encontrado ainda, tentando novamente...");
+    setTimeout(() => this.scrollToPost(postId), 400);
+    return;
+  }
+
+  element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+ionViewDidEnter() {
+  this.activeRoute.queryParams.subscribe(params => {
+    const postId = params['postId'];
+    if (postId) {
+      this.scrollToPost(postId)
+    }
+  })
 }
 loadPosts() {
     this.postsService.getPostsRealtime().subscribe({

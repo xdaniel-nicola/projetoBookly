@@ -15,7 +15,9 @@
 
   <div class="feed">
   @for (review of reviews; track review.id) {
-    <div class="review-card">
+    <div class="review-card"
+    #reviewRef
+    [attr.id]="'post-' + review.id">
 
       <div class="review-user-data">
         <h3 class="review-owner">Avaliação de <strong>{{ review.user }}</strong></h3>
