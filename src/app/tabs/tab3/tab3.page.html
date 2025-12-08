@@ -63,7 +63,14 @@
         @for (comment of activeReview?.comments || []; track comment.text) {
           <div class="comment-item">
             
-            <img class="avatar" [src]="comment.avatar" alt="{{ comment.user }}"/>
+            <img *ngIf="comment.userDataLoaded"
+              [src]="comment.photoURL"
+              class="avatar">
+
+          <img *ngIf="!comment.userDataLoaded"
+              src="../../../assets/perfis/homem.jpeg"
+              class="avatar">
+
             <ion-icon name="chatbubble-outline"></ion-icon>
             <div class="comment-user">
               <strong>{{ comment.user }}</strong>

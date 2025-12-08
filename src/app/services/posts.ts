@@ -115,7 +115,10 @@ getPostsRealtime(): Observable<any[]> {
           id,
           ...post,
           comments: post.comments
-            ? Object.values(post.comments)
+            ? Object.values(post.comments).map((c: any) => ({
+              ...c,
+              userDataLoaded: false
+            }))
             : [],
 
           liked: currentUser ? likedBy.includes(currentUser.uid) : false
@@ -206,13 +209,20 @@ getPostsRealtime(): Observable<any[]> {
     const userDoc = await getDoc(doc(this.firestore, `users/${currentUser.uid}`));
     const userData = userDoc.data();
 
+
     const comment = {
       userId: currentUser.uid,
-      user: userData?.['username'] || currentUser.displayName || currentUser.email,
-      avatar: userData?.['profileImage'] || currentUser.photoURL,
       text: commentText,
       timestamp: Timestamp.now()
     };
+
+    const triggeredUsername = userData?.['username'] || 
+    currentUser.displayName || 
+    currentUser.email || "Usuário"; 
+    
+    const triggeredAvatar = userData?.['profileImage'] || 
+    currentUser.photoURL || 
+    null;
 
     const postRef = doc(this.firestore, `posts/${postId}`);
     const snap = await getDoc(postRef);
@@ -233,8 +243,8 @@ getPostsRealtime(): Observable<any[]> {
     postData.userId,
     postData.book?.title,
     postData.book?.image,
-    comment.user,
-    comment.avatar,
+    triggeredUsername,
+    triggeredAvatar,
     commentText
   );
 
