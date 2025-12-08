@@ -18,6 +18,7 @@ import {
 import { Notifications, Notification } from '../../services/notifications'
 import { Router } from '@angular/router';
 import { notifications, timeSharp } from 'ionicons/icons';
+import { getFirestore, getDoc, doc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-tab4',
@@ -59,13 +60,31 @@ export class Tab4Page implements OnInit {
     this.loadNotifications();
   }
 
+  async loadUserDataForNotifications() {
+    for (const notif of this.notifications) {
+      if (!notif.triggeredBy) continue;
+
+      const userDoc = await getDoc(doc(getFirestore(), `users/${notif.triggeredBy}`));
+      const userData = userDoc.data()
+    
+      notif.triggeredByUsername = userData?.['username'] || 'Usuário';
+      notif.triggeredByAvatar = userData?.['profileImage'] ||
+                                userData?.['photoURL'] ||
+                                userData?.['avatarUrl'] ||
+                                  '../../../assets/perfis/homem.jpeg';
+      notif.userDataLoaded = true;
+  }
+  }
+
   loadNotifications() {
     this.loading = true;
 
     this.notificationsService.getUserNotifications().subscribe({
-      next: (notifications) => {
+      next: async(notifications) => {
         console.log("Notificações recebidas: ", notifications);
         this.notifications = notifications;
+
+        await this.loadUserDataForNotifications();
         this.updateUnreadCount();
         this.loading = false;
       },
@@ -94,7 +113,9 @@ export class Tab4Page implements OnInit {
 
   goToPost(notification: Notification) {
     this.MarkAsRead(notification);
-    this.router.navigate(['/tabs/tab3']);
+    this.router.navigate(['/tabs/tab3'], {
+      queryParams: {postId: notification.postId}
+    });
   }
 
   getNotificationMessage(notification: Notification): string {

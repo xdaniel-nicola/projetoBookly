@@ -29,6 +29,7 @@ import { Firestore
   bookTitle: string;
   bookImage: string;
   commentText?: string;
+  userDataLoaded?: boolean;
   createdAt: any;
   read: boolean;
  }
