@@ -20,6 +20,7 @@ import {
 } from '@ionic/angular/standalone';
 import { ActionSheetController } from '@ionic/angular';
 import { PostsService } from 'src/app/services/posts';
+import { Capacitor } from '@capacitor/core';
 // Removido o import 'count' não utilizado
 
 type Book = {
@@ -131,8 +132,15 @@ export class Tab5Page implements OnInit {
     this.ngZone.run(() => {
       this.userData = data;
       console.log('Dados do usuário no Tab5Page: ', this.userData);
+      if (this.userData.photoURL) {
+        if (this.userData.photoURL.startsWith('data:image')) {
+          this.userData.photoURL = this.userData.photoURL;
+        } else {
+        this.userData.photoURL = Capacitor.convertFileSrc(this.userData.photoURL);
+        }
+      }
     });
-
+    
     const posts = await this.postsService.getUserPosts(this.userData.uid);
 
     posts.forEach((p: any) => {
