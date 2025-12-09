@@ -7,6 +7,7 @@ import { Auth, updateEmail, updatePassword } from '@angular/fire/auth';
 import { FirestoreService } from '../../services/firestore';
 import { Permissions } from 'src/app/services/permissions';
 import { UserService } from 'src/app/services/user.service';
+import { ToastService } from 'src/app/services/toast-service';
 
 @Component({
   selector: 'app-editprofile',
@@ -34,7 +35,8 @@ export class EditProfilePage {
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private permissionsService: Permissions,
-    private userService: UserService
+    private userService: UserService,
+    private toastService: ToastService
   ) {
     const nav = this.router.currentNavigation();
     console.log('Dados recebidos', this.profile);
@@ -75,7 +77,7 @@ export class EditProfilePage {
     if (!user) return;
 
     if (this.profile.password && this.profile.password !== this.profile.confirmPassword) {
-      this.showToast('As senhas não coincidem.');
+      this.toastService.show('As senhas não coincidem.');
       return;
     }
 
@@ -101,11 +103,11 @@ export class EditProfilePage {
         updatedAt: new Date()
       });
 
-      this.showToast('Perfil atualizado com sucesso!');
+      this.toastService.show('Perfil atualizado com sucesso!');
       this.router.navigate(['/tabs/tab5']);
     } catch (error: any) {
       console.log(error);
-      this.showToast('Erro ao atualizar o perfil: ' + error.message);
+      this.toastService.show('Erro ao atualizar o perfil: ' + error.message);
     }
     loading.dismiss();
   }

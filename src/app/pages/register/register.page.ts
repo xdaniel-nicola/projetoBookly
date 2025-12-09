@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { Auth, createUserWithEmailAndPassword, updateProfile } from '@angular/fire/auth';
 import { FirestoreService } from '../../services/firestore';
+import { ToastService } from 'src/app/services/toast-service';
 
 @Component({
   selector: 'app-register',
@@ -28,23 +29,24 @@ export class SignupPage {
     private router: Router,
     private auth: Auth,
     private firestoreService: FirestoreService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private toastService: ToastService
   ) {}
 
   async onContinue() {
     if (!this.email || !this.fullName || !this.username ||!this.phone || !this.password || !this.confirmPassword) {
-      this.showToast('Preencha todos os campos.');
+      this.toastService.show('Preencha todos os campos.');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.email)) {
-      return this.showToast('E-mail inválido.');
+      return this.toastService.show('E-mail inválido.');
     }
 
     const onlyNumbers = this.phone.replace(/\D/g, '');
     if (onlyNumbers.length < 10 || onlyNumbers.length > 11) {
-      return this.showToast('Número de telefone inválido.');
+      return this.toastService.show('Número de telefone inválido.');
     }
 
     const cleanedPhone = onlyNumbers;
@@ -57,22 +59,22 @@ export class SignupPage {
 
     const usernameRegex = /^[a-zA-Z][a-zA-Z0-9._]{2,20}$/;
     if (!usernameRegex.test(usernameClean)) {
-      return this.showToast('Nome de usuário inválido.');
+      return this.toastService.show('Nome de usuário inválido.');
     }
 
     const usernameLower = this.username.toLowerCase();
 
     const existingUsername = await this.firestoreService.get('usernames', usernameLower);
     if (existingUsername) {
-      return this.showToast('Esse nome de usuário já está em uso.');
+      return this.toastService.show('Esse nome de usuário já está em uso.');
     }
 
     if (this.password.length < 6) {
-      return this.showToast('A senha deve ter pelo menos 6 caracteres.');
+      return this.toastService.show('A senha deve ter pelo menos 6 caracteres.');
     }
 
     if (this.password !== this.confirmPassword) {
-      return this.showToast('As senhas não conferem.');
+      return this.toastService.show('As senhas não conferem.');
     }
 
     this.loading = true;
@@ -101,11 +103,11 @@ export class SignupPage {
         uid: user.uid
       });
 
-      this.showToast('Conta criada com sucesso!');
+      this.toastService.show('Conta criada com sucesso!');
       this.router.navigate(['/login']);
     } catch (err: any) {
       console.error(err);
-      this.showToast(this.getErrorMessage(err.code));
+      this.toastService.show(this.getErrorMessage(err.code));
     } finally {
       this.loading = false;
     }
