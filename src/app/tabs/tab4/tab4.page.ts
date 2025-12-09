@@ -8,8 +8,7 @@ import {
   IonToolbar,
   IonList, 
   IonItem, 
-  IonLabel, 
-  IonText, 
+  IonLabel,
   IonThumbnail,
   IonBadge,
   IonButton,
@@ -17,7 +16,6 @@ import {
 } from '@ionic/angular/standalone';
 import { Notifications, Notification } from '../../services/notifications'
 import { Router } from '@angular/router';
-import { notifications, timeSharp } from 'ionicons/icons';
 import { getFirestore, getDoc, doc } from '@angular/fire/firestore';
 
 @Component({
@@ -34,8 +32,7 @@ import { getFirestore, getDoc, doc } from '@angular/fire/firestore';
     IonToolbar,
     IonList, 
     IonItem, 
-    IonLabel, 
-    IonText, 
+    IonLabel,
     IonThumbnail,
     IonBadge,
     IonButton,

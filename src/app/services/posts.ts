@@ -14,14 +14,14 @@ import {
   deleteDoc
 } from '@angular/fire/firestore';
 
-import { getDatabase, 
+import { 
   ref, 
   set, 
   Database, 
   update, 
   onValue,
   push  } from '@angular/fire/database';
-import { Observable, timestamp } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Notifications } from './notifications';
 
 @Injectable({

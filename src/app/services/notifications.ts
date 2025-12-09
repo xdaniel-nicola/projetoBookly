@@ -1,6 +1,5 @@
-import { CurrencyPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { Auth, user } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { Firestore
   ,collection
   ,addDoc
@@ -11,11 +10,9 @@ import { Firestore
   ,updateDoc
   ,doc
   ,getDocs
-  ,collectionData
   ,onSnapshot
  } from '@angular/fire/firestore';
- import { Observable, of, from} from 'rxjs';
- import { switchMap, map } from 'rxjs/operators';
+ import { Observable} from 'rxjs';
 
 
  export interface Notification {

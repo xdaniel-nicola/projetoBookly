@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Database, ref, set, push, update, onValue } from '@angular/fire/database';
+import { Database, ref, set, onValue } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'

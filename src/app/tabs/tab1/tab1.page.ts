@@ -4,28 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BooksService } from '../../services/books.service'
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent
-  ,IonItem
-  ,IonInput
-  ,IonSearchbar
-  ,IonLabel
-  ,IonCol
-  ,IonRow
-  ,IonGrid
-  ,IonCard
-  ,IonCardHeader
-  ,IonCardSubtitle
-  ,IonCardTitle
-  ,IonCardContent
-  ,IonButton
-  ,IonIcon
-  ,IonInfiniteScroll
-  ,IonInfiniteScrollContent
-  ,IonAvatar
-  ,IonSegment
-  ,IonSegmentButton
- } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../../explore-container/explore-container.component';
 
 @Component({
   selector: 'app-tab1',

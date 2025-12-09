@@ -8,10 +8,7 @@ import {
   IonHeader, 
   IonTitle, 
   IonToolbar,
-  IonButton, 
-  IonCol, 
-  IonRow, 
-  IonGrid,
+  IonButton,
   IonSkeletonText,
   IonRefresher,
   IonRefresherContent,
@@ -21,7 +18,6 @@ import {
 import { ActionSheetController } from '@ionic/angular';
 import { PostsService } from 'src/app/services/posts';
 import { Capacitor } from '@capacitor/core';
-import { signOut } from '@angular/fire/auth';
 // Removido o import 'count' não utilizado
 
 type Book = {
@@ -44,10 +40,7 @@ type Book = {
     IonToolbar, 
     CommonModule, 
     FormsModule,
-    IonButton, 
-    IonCol, 
-    IonRow, 
-    IonGrid,
+    IonButton,
     IonSkeletonText,
     IonRefresher,
     IonRefresherContent,

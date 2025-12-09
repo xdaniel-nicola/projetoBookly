@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, getDoc, updateDoc, onSnapshot } from '@angular/fire/firestore';
-import { Auth, user, signOut } from '@angular/fire/auth';
-import { firstValueFrom } from 'rxjs';
-import { Filesystem, Directory } from '@capacitor/filesystem'
+import { Auth, signOut } from '@angular/fire/auth';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { Capacitor } from '@capacitor/core';
 import { onAuthStateChanged } from 'firebase/auth';
 
 @Injectable({

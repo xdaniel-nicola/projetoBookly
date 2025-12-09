@@ -6,7 +6,6 @@ import { IonHeader, IonToolbar, IonTitle, IonContent
  } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ExploreContainerComponent } from '../../explore-container/explore-container.component';
 import { PostsService } from '../../services/posts';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { Capacitor } from '@capacitor/core';
@@ -17,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent
     ,IonIcon
     ,IonTextarea
     ,IonButton

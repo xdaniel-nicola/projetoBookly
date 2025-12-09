@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent
   ,IonItem
   ,IonSearchbar
   ,IonLabel
-  ,IonThumbnail
   ,IonList
  } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../../explore-container/explore-container.component';
 import { BooksService } from '../../services/books.service';
 
 @Component({
@@ -18,7 +16,6 @@ import { BooksService } from '../../services/books.service';
     ,IonItem
     ,IonSearchbar
     ,IonLabel
-    ,IonThumbnail
     ,IonList
   ]
 })
