@@ -31,58 +31,6 @@ async pickImageFromGallery(): Promise<string | null> {
   }
 }
 
-async saveImageToFilesystem(base64Data: string, uid: string): Promise<string> {
-  const fileName = `profile_${uid}.jpeg`;
-
-  if (Capacitor.getPlatform() === 'web') {
-    return base64Data;
-  }
-
-  await Filesystem.writeFile({
-    path: fileName,
-    data: base64Data.replace('data:image/jpeg;base64,',''),
-    directory: Directory.Data
-  });
-
-  const fileUri = await Filesystem.getUri({
-    path: fileName,
-    directory: Directory.Data
-  })
-
-  return fileUri.uri;
-}
-
-async loadImage(path: string): Promise<string | null> {
-  try {
-    const file = await Filesystem.readFile({
-      path,
-      directory: Directory.Data
-    });
-
-    return `data:image/jpeg;base64,${file.data}`;
-  }catch (err) {
-    console.error("Erro ao ler foto local:", err);
-    return null
-  }
-}
-
-async saveImage(base64Data: string, userId: string) {
-  const fileName = `profile_${userId}.jpeg`;
-
-  const saved = await Filesystem.writeFile({
-    path: fileName,
-    directory: Directory.Data,
-    data: base64Data
-  });
-
-  const fileUri = await Filesystem.getUri({
-    path: fileName,
-    directory: Directory.Data
-  });
-
-  return fileUri.uri
-}
-
 listenUser(uid: string, callback: (data: any) => void) {
   const userRef = doc(this.firestore, `users/${uid}`);
   return onSnapshot(userRef, (snap) => {
