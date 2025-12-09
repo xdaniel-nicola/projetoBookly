@@ -63,9 +63,9 @@ export class EditProfilePage {
       this.profile.confirmPassword = '';
       this.profile.photoURL = userData.photoURL;
 
-      if (userData.photoURL) {
-        this.avatarPreview = await this.userService.loadImage(userData.photoURL);
-      }
+      // if (userData.photoURL) {
+      //   this.avatarPreview = await this.userService.loadImage(userData.photoURL);
+      // }
     }
   }
   async onSalvar() {
@@ -130,15 +130,15 @@ export class EditProfilePage {
 
 async pickPhoto() {
   const user = this.auth.currentUser;
-  if(!user) return;
+  if (!user) return;
 
   const base64Img = await this.userService.pickImageFromGallery();
   if (!base64Img) return;
 
-  const loaclPath = await this.userService.saveImageToFilesystem(base64Img, user.uid);
-
   this.avatarPreview = base64Img;
-  this.profile.photoURL = loaclPath;
+
+  this.profile.photoURL = base64Img;
 }
+
 
 }
