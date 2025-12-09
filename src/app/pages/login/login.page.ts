@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { Auth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from '@angular/fire/auth';
 import { FirestoreService } from '../../services/firestore'
+import { ToastService } from 'src/app/services/toast-service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -21,7 +22,8 @@ export class SigninPage {
     private router: Router,
     private auth: Auth,
     private firestoreService: FirestoreService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private toastService: ToastService
 ) {}
   
   isEmail(value: string): boolean {
@@ -30,7 +32,7 @@ export class SigninPage {
 
   async onContinue() {
     if (!this.email || !this.password) {
-      return this.showToast('Preencha todos os campos.');
+      return this.toastService.show('Preencha todos os campos.');
     }
 
     try{
@@ -42,7 +44,7 @@ export class SigninPage {
         );
 
         if (!result || result.length === 0) {
-          return this.showToast('Usuário não encontrado.');
+          return this.toastService.show('Usuário não encontrado.');
         }
 
         emailParaLogin = result[0].email;
@@ -68,11 +70,11 @@ export class SigninPage {
       }
 
       console.log('Dados do usuário: ', userData);
-      this.showToast('Login realizado com sucesso!');
+      this.toastService.show('Login realizado com sucesso!');
       this.router.navigate(['/tabs/tab1']);
     } catch (err: any) {
       console.error(err);
-      this.showToast(this.translateError(err.code));
+      this.toastService.show(this.translateError(err.code));
     }
   }
 
@@ -95,11 +97,11 @@ export class SigninPage {
         });
       }
 
-      this.showToast('Login com Google realizado!');
+      this.toastService.show('Login com Google realizado!');
       this.router.navigate(['/tabs/tab1']);
     } catch (err: any) {
       console.error(err);
-      this.showToast('Erro ao entrar com Google.');
+      this.toastService.show('Erro ao entrar com Google.');
     }
   }
 

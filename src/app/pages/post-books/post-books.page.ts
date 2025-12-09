@@ -5,6 +5,7 @@ import { IonicModule, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { PostsService } from '../../services/posts';
 import { ToastController } from '@ionic/angular';
+import { ToastService } from 'src/app/services/toast-service';
 
 @Component({
   selector: 'app-postbooks',
@@ -41,7 +42,9 @@ export class PostBooksPage {
   constructor(private router: Router, 
     private navCtrl: NavController, 
     private postsService: PostsService,
-    private toastCtrl: ToastController) {this.loadBookFromNavigation();}
+    private toastCtrl: ToastController,
+    private toastService: ToastService
+  ) {this.loadBookFromNavigation();}
 
   async fetchGoogleBooksLink(title: string, author: string): Promise<string> {
     const query = encodeURIComponent(`${title} ${author}`);
@@ -142,11 +145,11 @@ export class PostBooksPage {
     try {
       await this.postsService.savePost(postData);
 
-      this.showToast('Avaliação enviada com sucesso!');
+      this.toastService.show('Avaliação enviada com sucesso!');
       this.router.navigate(['/tabs/tab3']);
     } catch (error) {
       console.error('Erro ao enviar avaliação: ', error);
-      this.showToast('Erro ao enviar avaliação. Tente novamente.');
+      this.toastService.show('Erro ao enviar avaliação. Tente novamente.');
     }
 
     
