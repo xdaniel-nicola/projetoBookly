@@ -15,7 +15,8 @@ import {
   IonInput,
   IonSelect,
   IonSelectOption,
-  IonDatetime
+  IonDatetime,
+  IonTextarea
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { PostsService } from 'src/app/services/posts';
@@ -41,7 +42,8 @@ import { PostsService } from 'src/app/services/posts';
   IonInput,
   IonSelect,
   IonSelectOption,
-  IonDatetime
+  IonDatetime,
+  IonTextarea
 ]
 })
 export class EditpostPage implements OnInit {
