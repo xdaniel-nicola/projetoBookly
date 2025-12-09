@@ -38,6 +38,11 @@ ngOnInit() {
   this.loadPosts();
 }
 
+fixUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  return url.replace("http://", "https://");
+}
+
 async scrollToPost(postId: string) {
   const element = document.getElementById(`post-${postId}`);
 

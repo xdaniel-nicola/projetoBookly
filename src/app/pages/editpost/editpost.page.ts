@@ -84,6 +84,11 @@ export class EditpostPage implements OnInit {
       this.rating = post.book.rating;
     }
   }
+  
+  fixUrl(url: string | null | undefined): string | null {
+    if (!url) return null;
+    return url.replace("http://", "https://");
+  }
 
   setRating(star: number) {
     this.rating = star;

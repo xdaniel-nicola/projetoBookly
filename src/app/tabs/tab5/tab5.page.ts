@@ -79,6 +79,11 @@ export class Tab5Page implements OnInit {
     private actionSheetCtrl: ActionSheetController
   ) {}
 
+  fixUrl(url: string | null | undefined): string | null {
+    if (!url) return null;
+    return url.replace("http://", "https://");
+  }
+
   async openBookOptions(post: any) {
     const actionSheet = await this.actionSheetCtrl.create({
       header: post.book.title,

@@ -27,7 +27,7 @@
       </div>
 
       <div class="review-header">
-        <img [src]="review.book.image" alt="{{ review.book.title }}" />
+        <img [src]="fixUrl(review.book.image)" alt="{{ review.book.title }}" />
         <div class="review-info">
           <h3>{{ review.book.title }}</h3>
           <p class="book-title">{{ review.book.author }}</p>
@@ -66,7 +66,7 @@
           <div class="comment-item">
             
             <img *ngIf="comment.userDataLoaded"
-              [src]="comment.photoURL"
+              [src]="fixUrl(comment.photoURL)"
               class="avatar">
 
           <img *ngIf="!comment.userDataLoaded"

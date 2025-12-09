@@ -56,6 +56,11 @@ export class PostBooksPage {
     return 'Link não encontrado';
   }
 
+  fixUrl(url: string | null | undefined): string | null {
+    if (!url) return null;
+    return url.replace("http://", "https://");
+  }
+
   async fetchMercadoLivreLink(title: string, author: string): Promise<string> {
     const query = encodeURIComponent(`${title} ${author}`);
     const url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
@@ -84,11 +89,11 @@ export class PostBooksPage {
     if (state?.book) {
       const book = state.book;
 
-      this.bookTitle = book.volumeInfo.title || 'Título Desconhecido';
-      this.bookAuthor = (book.volumeInfo.authors && book.volumeInfo.authors.join(', ')) || 'Autor Desconhecido';
-      this.bookCover = book.volumeInfo.imageLinks?.thumbnail || 'assets/capas/default-book.png';
-      this.releaseDate = book.volumeInfo.publishedDate || 'Data Desconhecida';
-      this.synopsis = book.volumeInfo.description || 'Sinopse não disponível.';
+      this.bookTitle = book.title || 'Título Desconhecido';
+      this.bookAuthor = (book.authors && book.authors.join(', ')) || 'Autor Desconhecido';
+      this.bookCover = book.thumbnail || 'assets/capas/default-book.png';
+      this.releaseDate = book.publishedDate || 'Data Desconhecida';
+      this.synopsis = book.description || 'Sinopse não disponível.';
       this.whereToFind = await this.fetchPurchaseLink(this.bookTitle, this.bookAuthor);
     }
   }

@@ -68,31 +68,31 @@ export class Tab1Page implements OnInit{
 
   getTerrorBooks() {
     this.booksService.searchBooks("subject:Horror").subscribe((data: any) => {
-      this.terrorBooks = data.items || [];
+      this.terrorBooks = data;
     })
   }
 
   getRomanceBooks() {
     this.booksService.searchBooks("subject:Romance").subscribe((data: any) => {
-      this.romanceBooks = data.items || [];
+      this.romanceBooks = data;
     })
   }
   
   getAventuraBooks() {
     this.booksService.searchBooks("subject:Fantasy").subscribe((data: any) => {
-      this.aventuraBooks = data.items || [];
+      this.aventuraBooks = data;
     })
   }
   
   getFantasiaBooks() {
     this.booksService.searchBooks("subject:Adventure").subscribe((data: any) => {
-      this.fantasiaBooks = data.items || [];
+      this.fantasiaBooks = data;
     })
   }
   
   getFiccaoBooks() {
     this.booksService.searchBooks("subject:Fiction").subscribe((data: any) => {
-      this.ficcaoBooks = data.items || [];
+      this.ficcaoBooks = data;
     })
   }
 
@@ -120,7 +120,7 @@ export class Tab1Page implements OnInit{
 
     this.booksService.searchBooks(query).subscribe({
       next: (res: any) => {
-        this.searchResults = res.items || [];
+        this.searchResults = res;
       },
       error: (err) => {
         console.error('Erro ao buscar livros: ', err);

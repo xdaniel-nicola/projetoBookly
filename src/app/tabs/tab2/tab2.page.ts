@@ -142,7 +142,7 @@ export class Tab2Page {
  
      this.booksService.searchBooks(query).subscribe({
        next: (res: any) => {
-         this.searchResults = res.items || [];
+         this.searchResults = res;
        },
        error: (err) => {
          console.error('Erro ao buscar livros: ', err);
@@ -151,9 +151,9 @@ export class Tab2Page {
    }
 
    getBestImage(book: any): string | null {
-  if (!book?.volumeInfo?.imageLinks) return null;
+  if (!book?.thumbnail) return null;
 
-  const links = book.volumeInfo.imageLinks;
+  const links = book.thumbnail;
 
   // ordem de prioridade do maior para o menor
   return (

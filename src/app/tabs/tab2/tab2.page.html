@@ -27,18 +27,18 @@
 
     <ion-list>
 
-      @for (book of searchResults; track book.id ?? book.volumeInfo.title ?? $index) {
+      @for (book of searchResults; track book.id ?? book.title ?? $index) {
         <ion-item>
 
-          @if (book.volumeInfo.imageLinks?.thumbnail) {
+          @if (book.thumbnail) {
             <div class="cover-card" slot="start" (click)="openBook(book)">
-              <img [src]="getBestImage(book)">
+              <img [src]="book.thumbnail">
             </div>
           }
 
           <ion-label>
-            <h2>{{ book.volumeInfo.title }}</h2>
-            <p>{{ book.volumeInfo.authors?.join(', ') }}</p>
+            <h2>{{ book.title }}</h2>
+            <p>{{ book.authors?.join(', ') }}</p>
           </ion-label>
 
         </ion-item>

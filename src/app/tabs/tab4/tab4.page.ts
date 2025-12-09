@@ -56,6 +56,11 @@ export class Tab4Page implements OnInit {
     this.loadNotifications();
   }
 
+  fixUrl(url:string | null | undefined): string | null {
+    if (!url) return null;
+    return url.replace("http://", "https://");
+  }
+
   ionViewWillEnter(){
     this.loadNotifications();
   }
