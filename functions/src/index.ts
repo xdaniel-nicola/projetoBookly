@@ -11,7 +11,8 @@ import {setGlobalOptions} from "firebase-functions";
 // import {onRequest} from "firebase-functions/https";
 // import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import {onDocumentCreated} from "firebase-functions/v2/firestore";
+import {GoogleAuth} from "google-auth-library";
 
 admin.initializeApp();
 
@@ -20,12 +21,36 @@ async function sendPushNotification(
   token: string,
   title: string,
   body: string,
-  data: any = {}
+  data: Record<string, string> = {}
 ) {
   await admin.messaging().send({
     token,
-    notification: { title, body },
+    notification: {title, body},
     data,
+  });
+
+  const projectId = process.env.GCLOUD_PROJECT;
+
+  const auth = new GoogleAuth({
+    scopes: ["https://www.googleapis.com/auth/firebase.messaging"],
+  });
+
+  const client = await auth.getClient();
+
+  const url = `https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`;
+
+  const message = {
+    message: {
+      token,
+      notification: {title, body},
+      data,
+    },
+  };
+
+  await client.request({
+    url,
+    method: "POST",
+    data: message,
   });
 }
 
@@ -58,7 +83,7 @@ export const onLikeCreated = onDocumentCreated(
       token,
       "Nova curtida!",
       `${like.userName} curtiu sua postagem.`,
-      { postId }
+      {postId}
     );
   }
 );
@@ -92,11 +117,10 @@ export const onCommentCreated = onDocumentCreated(
       token,
       "Novo comentário!",
       `${comment.userName} comentou na sua postagem.`,
-      { postId }
+      {postId}
     );
   }
 );
-
 
 
 // Start writing functions

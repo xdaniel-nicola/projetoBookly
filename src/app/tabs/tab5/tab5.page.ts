@@ -8,10 +8,7 @@ import {
   IonHeader, 
   IonTitle, 
   IonToolbar,
-  IonButton, 
-  IonCol, 
-  IonRow, 
-  IonGrid,
+  IonButton,
   IonSkeletonText,
   IonRefresher,
   IonRefresherContent,
@@ -20,6 +17,7 @@ import {
 } from '@ionic/angular/standalone';
 import { ActionSheetController } from '@ionic/angular';
 import { PostsService } from 'src/app/services/posts';
+import { Capacitor } from '@capacitor/core';
 // Removido o import 'count' não utilizado
 
 type Book = {
@@ -42,10 +40,7 @@ type Book = {
     IonToolbar, 
     CommonModule, 
     FormsModule,
-    IonButton, 
-    IonCol, 
-    IonRow, 
-    IonGrid,
+    IonButton,
     IonSkeletonText,
     IonRefresher,
     IonRefresherContent,
@@ -77,6 +72,11 @@ export class Tab5Page implements OnInit {
     private router: Router,
     private actionSheetCtrl: ActionSheetController
   ) {}
+
+  fixUrl(url: string | null | undefined): string | null {
+    if (!url) return null;
+    return url.replace("http://", "https://");
+  }
 
   async openBookOptions(post: any) {
     const actionSheet = await this.actionSheetCtrl.create({
@@ -128,11 +128,23 @@ export class Tab5Page implements OnInit {
     // Garante que todos os livros sejam carregados na inicialização
     // this.userData = await this.userService.getCurrentUserData();
     const data = await this.userService.getCurrentUserData();
+
+    if(!data) {
+      this.router.navigate(['/login'])
+      return;
+    }
     this.ngZone.run(() => {
       this.userData = data;
       console.log('Dados do usuário no Tab5Page: ', this.userData);
+      if (this.userData.photoURL) {
+        if (this.userData.photoURL.startsWith('data:image')) {
+          this.userData.photoURL = this.userData.photoURL;
+        } else {
+        this.userData.photoURL = Capacitor.convertFileSrc(this.userData.photoURL);
+        }
+      }
     });
-
+    
     const posts = await this.postsService.getUserPosts(this.userData.uid);
 
     posts.forEach((p: any) => {
@@ -175,6 +187,11 @@ export class Tab5Page implements OnInit {
 
     this.filteredBooks = this.books;
   }
+
+  async logOut() {
+  await this.userService.logout();
+  this.router.navigate(['/login'])
+}
 
   toggleStatus(status: string) {
       this.statusVisibility[status] = !this.statusVisibility[status];

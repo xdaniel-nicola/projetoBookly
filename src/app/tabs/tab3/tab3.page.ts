@@ -6,16 +6,17 @@ import { IonHeader, IonToolbar, IonTitle, IonContent
  } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ExploreContainerComponent } from '../../explore-container/explore-container.component';
 import { PostsService } from '../../services/posts';
-import { Timestamp } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { Capacitor } from '@capacitor/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent
     ,IonIcon
     ,IonTextarea
     ,IonButton
@@ -28,18 +29,48 @@ export class Tab3Page implements OnInit {
 reviews: any[] = [];
 activeReview: any = null;
 
-
-  postsService = inject(PostsService)
+  firestore = inject(Firestore);
+  postsService = inject(PostsService);
+  activeRoute = inject(ActivatedRoute);
 
 ngOnInit() {
   this.loadPosts();
 }
+
+fixUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  return url.replace("http://", "https://");
+}
+
+async scrollToPost(postId: string) {
+  const element = document.getElementById(`post-${postId}`);
+
+  if(!element) {
+    console.warn("Post não encontrado ainda, tentando novamente...");
+    setTimeout(() => this.scrollToPost(postId), 400);
+    return;
+  }
+
+  element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+ionViewDidEnter() {
+  this.activeRoute.queryParams.subscribe(params => {
+    const postId = params['postId'];
+    if (postId) {
+      this.scrollToPost(postId)
+    }
+  })
+}
 loadPosts() {
-    this.postsService.getPosts().subscribe({
-      next: (posts) => {
+    this.postsService.getPostsRealtime().subscribe({
+      next: (posts: any[]) => {
         console.log("POSTS RECEBIDOS:", posts);
         this.reviews = posts;
         console.log("POSTS PROCESSADOS:", this.reviews);
+        for (const review of this.reviews) {
+          this.loadUserDataForComments(review);
+        }
       },
       error: (err) => {
         console.error("ERRO AO LER POSTS:", err);
@@ -59,9 +90,42 @@ toggleLike(review: any) {
     });
 }
 
+async loadUserDataForComments(review: any) {
+  for (const comment of review.comments) {
+    if (!comment.userId) continue;
 
-  openCommentPanel(review: any) {
-    this.activeReview = {...review,newComment: ''};
+    const userDoc = await getDoc(doc(this.firestore, `users/${comment.userId}`));
+    const userData = userDoc.data();
+
+    comment.user = userData?.['username'] || "Usuário";
+    comment.photoURL = userData?.['profileImage'] || "../../../assets/perfis/homem.jpeg";
+    comment.userDataLoaded = true;
+  }
+}
+
+  convertImage (path: string) {
+    if (!path) return null;
+    return Capacitor.convertFileSrc(path);
+  }
+
+  async openCommentPanel(review: any) {
+    this.activeReview = {
+      ...review,
+      comments: review.comments || [],
+      newComment: ''};
+  
+
+  for (let c of this.activeReview.comments) {
+    if (!c.userId) continue;
+
+    const userDoc = await getDoc(doc(this.firestore, `users/${c.userId}`));
+    const userData = userDoc.data();
+
+    c.username = userData?.['username'] || "Usuário";
+    c.photoURL = userData?.['photoURL']
+    ? this.convertImage(userData['photoURL'])
+    : "../../../assets/perfis/homem.jpeg"
+    }
   }
 
   closeCommentPanel() {

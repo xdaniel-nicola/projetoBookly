@@ -34,15 +34,15 @@
           button
         >
           <ion-thumbnail slot="start">
-            <img [src]="notif.bookImage" alt="Capa do livro"/>
+            <img [src]="fixUrl(notif.bookImage)" alt="Capa do livro"/>
           </ion-thumbnail>
           
           <ion-label>
             <div class="notification-header">
               <img 
                 class="user-avatar" 
-                [src]="notif.triggeredByAvatar" 
-                [alt]="notif.triggeredByUsername"
+                [src]="fixUrl(notif.triggeredByAvatar)" 
+                [alt]="notif.triggeredBy"
               />
               <div class="notification-content">
                 <p class="notification-message">

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Auth, updateProfile, updateEmail, updatePassword } from '@angular/fire/auth';
+import { Auth, updateEmail, updatePassword } from '@angular/fire/auth';
 import { FirestoreService } from '../../services/firestore';
 import { Permissions } from 'src/app/services/permissions';
 import { UserService } from 'src/app/services/user.service';
@@ -61,6 +61,11 @@ export class EditProfilePage {
       this.profile.phone = userData.phone;
       this.profile.password = '';
       this.profile.confirmPassword = '';
+      this.profile.photoURL = userData.photoURL;
+
+      // if (userData.photoURL) {
+      //   this.avatarPreview = await this.userService.loadImage(userData.photoURL);
+      // }
     }
   }
   async onSalvar() {
@@ -78,10 +83,6 @@ export class EditProfilePage {
     await loading.present();
 
     try {
-      await updateProfile(user, {
-        displayName: this.profile.fullName,
-        photoURL: this.profile.photoURL
-      });
 
       if (this.profile.email !== user.email) {
         await updateEmail(user, this.profile.email);
@@ -127,15 +128,17 @@ export class EditProfilePage {
     this.profile.photoURL = this.avatarPreview;
   }
 
-  async saveAvatar() {
-    const user = this.auth.currentUser;
-    if (!user) return;
+async pickPhoto() {
+  const user = this.auth.currentUser;
+  if (!user) return;
 
-    await this.userService.updateUser(user.uid, {
-      photoURL: this.profile.photoURL
-    });
+  const base64Img = await this.userService.pickImageFromGallery();
+  if (!base64Img) return;
 
-    console.log("Avatar salvo com sucesso")
-  }
+  this.avatarPreview = base64Img;
+
+  this.profile.photoURL = base64Img;
+}
+
 
 }

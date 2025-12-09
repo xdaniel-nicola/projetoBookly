@@ -13,7 +13,7 @@
     @if (userData) {
     <div class="profile-header">
       <img class="avatar" 
-          [src]="userData.photoURL"
+          [src]="fixUrl(userData.photoURL)"
           alt = "Foto de perfil">
 
       <div class="profile-info">
@@ -22,6 +22,9 @@
 
         <ion-button size="small" color="dark" fill="outline" (click)="editarPerfil()">
           Editar perfil
+        </ion-button>
+        <ion-button color="danger" size="small" (click)="logOut()">
+          Sair
         </ion-button>
       </div>
     </div>
@@ -48,7 +51,7 @@
       @if (statusVisibility[status]) {
         <div class="book-scroll">
           <div class="book-card" *ngFor="let post of booksByStatus[status]" (click)="openBookOptions(post)">
-            <img [src]="post.book.image" [alt]="post.book.title" />
+            <img [src]="fixUrl(post.book.image)" [alt]="post.book.title" />
             <h4>{{ post.book.title }}</h4>
             <p>{{ post.book.author }}</p>
           </div>
@@ -67,7 +70,7 @@
 
         <div class="book-scroll">
           <div class="book-card" *ngFor="let book of evaluatedBooks">
-            <img [src]="book.image" [alt]="book.title" />
+            <img [src]="fixUrl(book.image)" [alt]="book.title" />
             <h4>{{ book.title }}</h4>
             <p>{{ book.author }}</p>
             <p>⭐ {{ book.rating }}</p>

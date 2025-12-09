@@ -25,48 +25,47 @@
 
 @if (searchResults.length > 0) {
   <div class="search-results">
-
     <ion-list>
+      @for (book of searchResults; track book.id ?? $index) {
 
-      @for (book of searchResults; track book.id ?? book.volumeInfo.title ?? $index) {
-        <ion-item>
+        <ion-item (click)="openBook(book)">
 
-          @if (book.volumeInfo.imageLinks?.thumbnail) {
+          @if (book.thumbnail) {
             <ion-thumbnail slot="start">
-              <img [src]="book.volumeInfo.imageLinks.thumbnail">
+              <img [src]="book.thumbnail" />
             </ion-thumbnail>
           }
 
           <ion-label>
-            <h2>{{ book.volumeInfo.title }}</h2>
-            <p>{{ book.volumeInfo.authors?.join(', ') }}</p>
+            <h2>{{ book.title }}</h2>
+            <p>{{ book.authors?.join(', ') }}</p>
           </ion-label>
 
         </ion-item>
+
       }
-
     </ion-list>
-
   </div>
 }
 
-  <!-- TERROR -->
-  <div class="book-section">
-    <div class="section-header">
-      <h2>Terror</h2>
-      <ion-icon name="chevron-forward"></ion-icon>
-    </div>
 
-    <div class="book-scroll">
-      <div class="book-card" *ngFor="let book of terrorBooks" (click)="openBook(book)">
-        <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
-        <h4>{{ book.volumeInfo?.title }}</h4>
-        <p>{{ book.volumeInfo?.authors?.[0] }}</p>
-      </div>
-    </div>
+<!-- TERROR -->
+<div class="book-section">
+  <div class="section-header">
+    <h2>Terror</h2>
+    <ion-icon name="chevron-forward"></ion-icon>
   </div>
 
-  <!-- AVENTURA -->
+  <div class="book-scroll">
+    <div class="book-card" *ngFor="let book of terrorBooks" (click)="openBook(book)">
+      <img [src]="book.thumbnail" [alt]="book.title" />
+      <h4>{{ book.title }}</h4>
+      <p>{{ book.authors?.[0] }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- AVENTURA -->
 <div class="book-section">
   <div class="section-header">
     <h2>Aventura</h2>
@@ -75,9 +74,9 @@
 
   <div class="book-scroll">
     <div class="book-card" *ngFor="let book of aventuraBooks" (click)="openBook(book)">
-      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
-      <h4>{{ book.volumeInfo?.title }}</h4>
-      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+      <img [src]="book.thumbnail" [alt]="book.title" />
+      <h4>{{ book.title }}</h4>
+      <p>{{ book.authors?.[0] }}</p>
     </div>
   </div>
 </div>
@@ -91,9 +90,9 @@
 
   <div class="book-scroll">
     <div class="book-card" *ngFor="let book of romanceBooks" (click)="openBook(book)">
-      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
-      <h4>{{ book.volumeInfo?.title }}</h4>
-      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+      <img [src]="book.thumbnail" [alt]="book.title" />
+      <h4>{{ book.title }}</h4>
+      <p>{{ book.authors?.[0] }}</p>
     </div>
   </div>
 </div>
@@ -107,9 +106,9 @@
 
   <div class="book-scroll">
     <div class="book-card" *ngFor="let book of fantasiaBooks" (click)="openBook(book)">
-      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
-      <h4>{{ book.volumeInfo?.title }}</h4>
-      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+      <img [src]="book.thumbnail" [alt]="book.title" />
+      <h4>{{ book.title }}</h4>
+      <p>{{ book.authors?.[0] }}</p>
     </div>
   </div>
 </div>
@@ -123,10 +122,11 @@
 
   <div class="book-scroll">
     <div class="book-card" *ngFor="let book of ficcaoBooks" (click)="openBook(book)">
-      <img [src]="getBestImage(book)" [alt]="book.volumeInfo?.title" />
-      <h4>{{ book.volumeInfo?.title }}</h4>
-      <p>{{ book.volumeInfo?.authors?.[0] }}</p>
+      <img [src]="book.thumbnail" [alt]="book.title" />
+      <h4>{{ book.title }}</h4>
+      <p>{{ book.authors?.[0] }}</p>
     </div>
   </div>
 </div>
+
 </ion-content>

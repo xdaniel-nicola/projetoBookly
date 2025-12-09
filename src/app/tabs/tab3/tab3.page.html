@@ -14,41 +14,45 @@
   </ion-header>
 
   <div class="feed">
-    @for (review of reviews; track review.id) {
-      <div class="review-card">
-        <div class="review-user-data">
-          <h3 class="review-owner">Avaliação de <strong>{{ review.user }}</strong></h3>
-          <p class="review-status">Status: {{ review.book.status }}</p>
-          <h5 class="review-title">{{ review.titleReview }}</h5>
-          <p class="review-text">{{ review.comment }}</p>
+  @for (review of reviews; track review.id) {
+    <div class="review-card"
+    #reviewRef
+    [attr.id]="'post-' + review.id">
+
+      <div class="review-user-data">
+        <h3 class="review-owner">Avaliação de <strong>{{ review.user }}</strong></h3>
+        <p class="review-status">Status: {{ review.book.status }}</p>
+        <h5 class="review-title">{{ review.titleReview }}</h5>
+        <p class="review-text">{{ review.comment }}</p>
+      </div>
+
+      <div class="review-header">
+        <img [src]="fixUrl(review.book.image)" alt="{{ review.book.title }}" />
+        <div class="review-info">
+          <h3>{{ review.book.title }}</h3>
+          <p class="book-title">{{ review.book.author }}</p>
         </div>
-        <div class="review-header">
-          <img [src]="review.book.image" alt=" {{ review.book.title }}"/>
-          <div class="review-info">
-            <h3>{{ review.book.title }}</h3>
-            <p class="book-title">{{ review.book.author }}</p>
-          </div>
-        </div>
-          <p class="review-date">{{ review.book.startDate | date:'dd/MM/yyyy HH:mm' }}</p>
-          <p class="review-date">{{review.book.rating}} <ion-icon name="star"></ion-icon></p>
-        </div>
-        <!-- <div class="review-user-data">
-          <h3 class="review-owner">Avaliação de <strong>{{ review.user }}</strong></h3>
-          <h5 class="review-title">{{ review.titleReview }}</h5>
-          <p class="review-text">{{ review.comment }}</p>
-        </div> -->
+      </div>
+
+      <p class="review-date">{{ review.book.startDate | date:'dd/MM/yyyy HH:mm' }}</p>
+      <p class="review-date">{{ review.book.rating }} <ion-icon name="star"></ion-icon></p>
+
       <div class="review-footer">
         <span (click)="toggleLike(review)">
           <ion-icon [name]="review.liked ? 'heart' : 'heart-outline'"></ion-icon>
           {{ review.likes }} curtidas
         </span>
-        <span (click)="openCommentPanel(review)"> 
+
+        <span (click)="openCommentPanel(review)">
           <ion-icon name="chatbox-outline"></ion-icon>
           {{ review.comments?.length || 0 }} comentários
         </span>
       </div>
-    }
-  </div>
+
+    </div> <!-- review-card -->
+  }
+</div>
+
 
   @if (activeReview) {
     <div class="comment-panel">
@@ -58,10 +62,17 @@
       </div>
 
       <div class="comment-list">
-        @for (comment of activeReview.comments; track comment.text) {
+        @for (comment of activeReview?.comments || []; track comment.text) {
           <div class="comment-item">
             
-            <img class="avatar" [src]="comment.avatar" alt="{{ comment.user }}"/>
+            <img *ngIf="comment.userDataLoaded"
+              [src]="fixUrl(comment.photoURL)"
+              class="avatar">
+
+          <img *ngIf="!comment.userDataLoaded"
+              src="../../../assets/perfis/homem.jpeg"
+              class="avatar">
+
             <ion-icon name="chatbubble-outline"></ion-icon>
             <div class="comment-user">
               <strong>{{ comment.user }}</strong>

@@ -17,11 +17,11 @@
         <div class="profile-image">
           <img [src]="avatarPreview" class="profile-photo" alt="Profile" />
         </div>
-        <button class="add-photo-btn" (click)="generateNewAvatar()">
-          <ion-icon name="add-circle"></ion-icon>
+        <button class="add-photo-btn" (click)="pickPhoto()">
+          <ion-icon name="camera"></ion-icon>
         </button>
-        <button class="save-photo-btn" (click)="saveAvatar()">
-          <ion-icon name="save-outline"></ion-icon>
+        <button class="save-photo-btn" (click)="generateNewAvatar()">
+          <ion-icon name="dice-outline"></ion-icon>
         </button>
       </div>
     </div>
