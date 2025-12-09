@@ -15,11 +15,12 @@
     <!-- NOME -->
     <ion-item lines="full">
       <ion-label position="stacked" class="field-label">TÍTULO DA AVALIAÇÃO</ion-label>
-      <ion-input
+      <ion-textarea
         [(ngModel)]="bookName"
         placeholder="Adicionar título da avaliação"
         class="custom-input"
-      ></ion-input>
+        autoGrow="True"
+      ></ion-textarea>
     </ion-item>
 
     <!-- AVALIAÇÃO -->
@@ -36,11 +37,12 @@
         </div>
       </div>
       <div class="rating-input">
-        <ion-input 
+        <ion-textarea 
         class="custom-input" 
         placeholder="O que você achou do livro?"
         [(ngModel)]="reviewComment"
-        ></ion-input>
+        autoGrow="true"
+        ></ion-textarea>
       </div>
     </ion-item>
 
