@@ -21,6 +21,7 @@ import {
 import { ActionSheetController } from '@ionic/angular';
 import { PostsService } from 'src/app/services/posts';
 import { Capacitor } from '@capacitor/core';
+import { signOut } from '@angular/fire/auth';
 // Removido o import 'count' não utilizado
 
 type Book = {
@@ -134,6 +135,11 @@ export class Tab5Page implements OnInit {
     // Garante que todos os livros sejam carregados na inicialização
     // this.userData = await this.userService.getCurrentUserData();
     const data = await this.userService.getCurrentUserData();
+
+    if(!data) {
+      this.router.navigate(['/login'])
+      return;
+    }
     this.ngZone.run(() => {
       this.userData = data;
       console.log('Dados do usuário no Tab5Page: ', this.userData);
@@ -188,6 +194,11 @@ export class Tab5Page implements OnInit {
 
     this.filteredBooks = this.books;
   }
+
+  async logOut() {
+  await this.userService.logout();
+  this.router.navigate(['/login'])
+}
 
   toggleStatus(status: string) {
       this.statusVisibility[status] = !this.statusVisibility[status];

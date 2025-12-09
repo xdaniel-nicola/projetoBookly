@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, getDoc, updateDoc, onSnapshot } from '@angular/fire/firestore';
-import { Auth, user } from '@angular/fire/auth';
+import { Auth, user, signOut } from '@angular/fire/auth';
 import { firstValueFrom } from 'rxjs';
 import { Filesystem, Directory } from '@capacitor/filesystem'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
+import { onAuthStateChanged } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,22 @@ export class UserService {
     private auth: Auth
   ) {}
 
+async logout() {
+  return signOut(this.auth);
+}
+
+getCurrentUserData(): Promise<any> {
+  return new Promise((resolve) => {
+    onAuthStateChanged(this.auth, async (user) => {
+      if (!user) return resolve(null);
+
+      const ref = doc(this.firestore, 'users', user.uid);
+      const snap = await getDoc(ref);
+
+      resolve(snap.data());
+    })
+  })
+}
 async pickImageFromGallery(): Promise<string | null> {
   try {
     const img = await Camera.getPhoto({
@@ -38,17 +55,17 @@ listenUser(uid: string, callback: (data: any) => void) {
   })
 }
   
-  async getCurrentUserData() {
-    const currentUser = await firstValueFrom(user(this.auth));
-    if (!currentUser) return null;
+  // async getCurrentUserData() {
+  //   const currentUser = await firstValueFrom(user(this.auth));
+  //   if (!currentUser) return null;
 
-    const ref = doc(this.firestore, `users/${currentUser.uid}`);
-    const snap = await getDoc(ref);
+  //   const ref = doc(this.firestore, `users/${currentUser.uid}`);
+  //   const snap = await getDoc(ref);
 
-    if (!snap.exists()) return null;
+  //   if (!snap.exists()) return null;
 
-    return snap.data();
-  }
+  //   return snap.data();
+  // }
   
   updateUser(uid: string, data: any) {
     const ref = doc(this.firestore, 'users', uid);
