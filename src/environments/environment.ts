@@ -22,7 +22,9 @@ export const environment = {
   messagingSenderId: "104789560838",
   appId: "1:104789560838:web:952a9d3d9979ba6c31fd87",
   measurementId: "G-K8CLXF0Q9W",
+  databaseURL: "https://projetobookly-1f8ad-default-rtdb.firebaseio.com/",
   databaseURL: "https://projetobookly-1f8ad-default-rtdb.firebaseio.com/"
+  
   }
 };
 
